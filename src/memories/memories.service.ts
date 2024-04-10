@@ -1,25 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { CreateMemoryDto } from './dto/create-memory.dto';
 import { UpdateMemoryDto } from './dto/update-memory.dto';
-import { Memory } from './entities/memory.entity';
+import { Memory, MemoryDocument } from './entities/memory.entity';
+import { ConfigService } from '@nestjs/config';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class MemoriesService {
+  constructor(
+    private configService: ConfigService,
+    @InjectModel(Memory.name)
+    private readonly memoryModel: Model<MemoryDocument>,
+  ) {
+    console.log(configService.get('DATABASE_URI'));
+  }
   create(createMemoryDto: CreateMemoryDto) {
     return 'This action adds a new memory';
   }
 
-  findAll(): Memory[] {
-    return [
-      {
-        _id: '1',
-        name: 'one',
-      },
-      {
-        _id: '2',
-        name: 'two',
-      },
-    ];
+  async findAll(): Promise<Memory[]> {
+    const result = await this.memoryModel.find();
+    return result;
   }
 
   findOne(id: number) {
