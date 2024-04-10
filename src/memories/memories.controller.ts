@@ -11,6 +11,9 @@ import { MemoriesService } from './memories.service';
 import { CreateMemoryDto } from './dto/create-memory.dto';
 import { UpdateMemoryDto } from './dto/update-memory.dto';
 
+import { ApiTags } from '@nestjs/swagger';
+
+@ApiTags('Memories')
 @Controller('/api/memories')
 export class MemoriesController {
   constructor(private readonly memoriesService: MemoriesService) {}
