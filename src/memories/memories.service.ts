@@ -5,6 +5,7 @@ import { Memory, MemoryDocument } from './entities/memory.entity';
 import { ConfigService } from '@nestjs/config';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class MemoriesService {
@@ -12,14 +13,23 @@ export class MemoriesService {
     private configService: ConfigService,
     @InjectModel(Memory.name)
     private readonly memoryModel: Model<MemoryDocument>,
+    private readonly auth: AuthService,
   ) {
     console.log(configService.get('DATABASE_URI'));
   }
   create(createMemoryDto: CreateMemoryDto) {
-    return 'This action adds a new memory';
+    console.log(createMemoryDto);
+    const newMemory = this.memoryModel.create({
+      name: createMemoryDto.name,
+      note: createMemoryDto.note,
+    });
+
+    return newMemory;
   }
 
   async findAll(): Promise<Memory[]> {
+    const currentUserId = this.auth.getCurrentUserId();
+    console.log({currentUserId})
     const result = await this.memoryModel.find();
     return result;
   }

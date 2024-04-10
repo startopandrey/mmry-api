@@ -5,6 +5,7 @@ import { MemoriesModule } from './memories/memories.module';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MemorySchema } from './memories/entities/memory.entity';
+import { AuthService } from './auth/auth.service';
 
 @Module({
   imports: [
