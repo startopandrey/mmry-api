@@ -13,7 +13,7 @@ import { UpdateMemoriesCardDto } from './dto/update-memories-card.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateMemoriesCardCollectionDto } from './dto/create-memories-card-collection.dto';
 
-@ApiTags('Memories Card')
+@ApiTags('Memories Cards')
 @Controller('/api/memories-card')
 export class MemoriesCardController {
   constructor(private readonly memoriesCardService: MemoriesCardService) {}
@@ -23,7 +23,7 @@ export class MemoriesCardController {
     return this.memoriesCardService.create(createMemoriesCardDto);
   }
 
-  @Post('/collection')
+  @Post('collection')
   createCollection(
     @Body() createMemoriesCardCollectionDto: CreateMemoriesCardCollectionDto,
   ) {

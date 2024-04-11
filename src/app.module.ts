@@ -10,6 +10,7 @@ import { MemoriesCardModule } from './memories-card/memories-card.module';
 import { MemoryCardSchema } from './memories-card/entities/memory-card.entity';
 import { UsersModule } from './users/users.module';
 import { MyFollowersModule } from './my-followers/my-followers.module';
+import { WebhooksModule } from './webhooks/webhooks.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { MyFollowersModule } from './my-followers/my-followers.module';
     MemoriesCardModule,
     UsersModule,
     MyFollowersModule,
+    WebhooksModule,
   ],
   controllers: [AppController],
   providers: [AppService],
