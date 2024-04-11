@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { PageOptionsDto } from './page-options.dto';
+import { PaginationQuery } from './pagination-options.dto';
 
 export interface PageMetaDtoParameters {
-  pageOptionsDto: PageOptionsDto;
+  pageOptionsDto: PaginationQuery;
   itemCount: number;
 }
 

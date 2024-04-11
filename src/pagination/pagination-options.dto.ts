@@ -7,7 +7,7 @@ export enum Order {
   DESC = 'desc',
 }
 
-export class PageOptionsDto {
+export class PaginationQuery {
   @ApiPropertyOptional({ enum: Order, default: Order.ASC })
   @IsEnum(Order)
   @IsOptional()

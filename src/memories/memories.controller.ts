@@ -1,3 +1,4 @@
+import { PaginationQuery } from 'src/pagination/pagination-options.dto';
 import {
   Controller,
   Get,
@@ -13,7 +14,6 @@ import { CreateMemoryDto } from './dto/create-memory.dto';
 import { UpdateMemoryDto } from './dto/update-memory.dto';
 
 import { ApiTags } from '@nestjs/swagger';
-import { PageOptionsDto } from 'src/pagination/page-options.dto';
 
 @ApiTags('Memories')
 @Controller('/api/memories')
@@ -31,7 +31,7 @@ export class MemoriesController {
   }
 
   @Get()
-  findAll(@Query() pageOptionsDto: PageOptionsDto) {
+  findAll(@Query() pageOptionsDto: PaginationQuery) {
     return this.memoriesService.pagination(pageOptionsDto);
   }
 

@@ -6,9 +6,9 @@ import { ConfigService } from '@nestjs/config';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { AuthService } from 'src/auth/auth.service';
-import { PageOptionsDto } from 'src/pagination/page-options.dto';
-import { PageDto } from 'src/pagination/page.dto';
-import { PageMetaDto } from 'src/pagination/page-meta.dto';
+import { PageDto } from 'src/pagination/pagination.dto';
+import { PageMetaDto } from 'src/pagination/pagination-meta.dto';
+import { PaginationQuery } from 'src/pagination/pagination-options.dto';
 
 @Injectable()
 export class MemoriesService {
@@ -37,7 +37,7 @@ export class MemoriesService {
     return result;
   }
 
-  async pagination(pageOptionsDto: PageOptionsDto): Promise<PageDto<any>> {
+  async pagination(pageOptionsDto: PaginationQuery): Promise<PageDto<any>> {
     console.log(pageOptionsDto.page);
     const entities = await this.memoryModel
       .find()
