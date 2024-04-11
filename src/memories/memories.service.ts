@@ -28,14 +28,26 @@ export class MemoriesService {
   }
 
   async findAll(): Promise<Memory[]> {
-    const currentUserId = this.auth.getCurrentUserId();
-    console.log({ currentUserId });
+    // const currentUserId = this.auth.getCurrentUserId();
+    // console.log({ currentUserId });
     const result = await this.memoryModel.find();
     return result;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} memory`;
+  async findOne(id: string) {
+    const memory = await this.memoryModel.findById(id);
+    // .populate({
+    //   path: 'categories',
+    //   model: 'Category',
+    //   select: ['category'],X
+    // })
+    // .populate({
+    //   path: 'user',
+    //   model: 'User',
+    // select: ['category'],
+    // })
+    // .exec();
+    return memory;
   }
 
   update(id: number, updateMemoryDto: UpdateMemoryDto) {

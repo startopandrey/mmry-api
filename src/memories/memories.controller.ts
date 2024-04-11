@@ -30,7 +30,12 @@ export class MemoriesController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.memoriesService.findOne(+id);
+    return this.memoriesService.findOne(id);
+  }
+
+  @Get(':id')
+  pagination(@Param('id') id: string) {
+    return this.memoriesService.findOne(id);
   }
 
   @Patch(':id')

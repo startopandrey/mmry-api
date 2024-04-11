@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { ASSETS_TYPE } from '../dto/update-memories-card.dto';
+
+import { MemoryAssetsParams } from 'src/memories/entities/memory.entity';
 
 export type MemoryCardDocument = MemoryCard & Document;
 @Schema({
@@ -11,12 +12,7 @@ export type MemoryCardDocument = MemoryCard & Document;
 })
 export class MemoryCard {
   @Prop()
-  assets: {
-    type: ASSETS_TYPE;
-    fileName: string;
-    uri: string;
-    thumbnailUri: string;
-  }[];
+  assets: MemoryAssetsParams[];
   @Prop()
   password: number;
   @Prop()

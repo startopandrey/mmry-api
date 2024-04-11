@@ -1,25 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
-export enum ASSETS_TYPE {
-  IMAGE,
-  VIDEO,
-}
-export class AssetsParam {
-  @ApiProperty({ enum: ASSETS_TYPE })
-  @IsEnum(ASSETS_TYPE, { each: true })
-  type: ASSETS_TYPE;
+import { IsNumber } from 'class-validator';
+import { AssetsParam } from 'src/memories/dto/create-memory.dto';
 
-  @ApiProperty()
-  @IsString()
-  fileName: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  uri: string;
-
-  @ApiProperty()
-  thumbnailUri: string;
-}
 export class UpdateMemoriesCardDto {
   @IsNumber()
   @ApiProperty()
