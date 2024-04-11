@@ -1,4 +1,8 @@
-import { AuthService, AuthServiceBase, FakeAuthService } from './../auth/auth.service';
+import {
+  AuthService,
+  AuthServiceBase,
+  FakeAuthService,
+} from './../auth/auth.service';
 import { Module } from '@nestjs/common';
 import { MyFollowersService } from './my-followers.service';
 import { MyFollowersController } from './my-followers.controller';

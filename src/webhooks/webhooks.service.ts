@@ -93,6 +93,46 @@ export class WebhooksService {
     const newUser = await new this.userModel(generatedUser);
     return newUser.save();
   }
-  private async deleteUser(userData: DeletedObjectJSON) {}
-  private async updateUser(userData: UserJSON) {}
+  private async deleteUser(userData: DeletedObjectJSON) {
+    const userId = userData.id;
+    await this.userModel.findOneAndDelete({
+      clerkUserId: userId,
+    });
+    return 'SUCCESS';
+  }
+  private async updateUser(userData: UserJSON) {
+    const {
+      id,
+      username,
+      first_name,
+      last_name,
+      image_url,
+      email_addresses,
+      created_at,
+      updated_at,
+      public_metadata,
+    } = userData;
+    const generatedUser = {
+      username,
+      emailAddress: email_addresses[0].email_address,
+      metadata: {
+        createdAt: created_at,
+        updatedAt: updated_at,
+      },
+      profile: {
+        firstName: first_name,
+        lastName: last_name,
+        birthday: public_metadata.birthday as string,
+        profileImage:
+          (image_url as string) ??
+          (public_metadata.profileImage as string) ??
+          '',
+      },
+    };
+    const newUser = await this.userModel.findOneAndUpdate(
+      { clerkUserId: id },
+      generatedUser,
+    );
+    return newUser;
+  }
 }

@@ -1,3 +1,4 @@
+import { Category, CategorySchema } from 'src/categories/entities/categories.entity';
 import {
   MemoryCard,
   MemoryCardSchema,
@@ -17,5 +18,9 @@ export default [
   {
     name: User.name,
     schema: UserSchema,
+  },
+  {
+    name: Category.name,
+    schema: CategorySchema,
   },
 ];
