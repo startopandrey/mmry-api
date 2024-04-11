@@ -16,9 +16,9 @@ export class MemoriesCardService {
     @InjectModel(MemoryCard.name)
     private readonly memoryCardModel: Model<MemoryCardDocument>,
   ) {}
-  create(createMemoriesCardDto: CreateMemoriesCardDto) {
-    const newMemoryCard = this.memoryCardModel.create(createMemoriesCardDto);
-    return newMemoryCard;
+  async create(createMemoriesCardDto: CreateMemoriesCardDto) {
+    const newMemoryCard = await new this.memoryCardModel(createMemoriesCardDto);
+    return newMemoryCard.save();
   }
   async createCollection({ quantity }: CreateMemoriesCardCollectionDto) {
     const emptyMemoriesCards = Array.from({ length: quantity }, () => {

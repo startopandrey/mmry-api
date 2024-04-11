@@ -3,10 +3,17 @@ import { ClerkPayload, ClerkSignatureInfo } from './dtos';
 import { DeletedObjectJSON, UserJSON, WebhookEvent } from '@clerk/backend';
 import { Webhook } from 'svix';
 import { ConfigService } from '@nestjs/config';
+import { User, UserDocument } from 'src/users/entities/user.entity';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class WebhooksService {
-  constructor(private configService: ConfigService) {}
+  constructor(
+    private configService: ConfigService,
+    @InjectModel(User.name)
+    private readonly userModel: Model<UserDocument>,
+  ) {}
   async handleEvent(
     { svix_id, svix_timestamp, svix_signature }: ClerkSignatureInfo,
     payload: ClerkPayload,
@@ -47,7 +54,45 @@ export class WebhooksService {
     }
     return { success: true };
   }
-  async createUser(userData: UserJSON) {}
-  async deleteUser(userData: DeletedObjectJSON) {}
-  async updateUser(userData: UserJSON) {}
+  private async createUser(userData: UserJSON) {
+    const {
+      id,
+      username,
+      first_name,
+      last_name,
+      image_url,
+      email_addresses,
+      created_at,
+      updated_at,
+      public_metadata,
+    } = userData;
+    console.log({ userData });
+    const generatedUser: User = {
+      clerkUserId: id,
+      username: `user_${new Date().getTime()}`,
+      emailAddress: email_addresses[0].email_address,
+      metadata: {
+        createdAt: created_at,
+        updatedAt: updated_at,
+      },
+      profile: {
+        firstName: first_name,
+        lastName: last_name,
+        isVerified: email_addresses[0].verification.status == 'verified',
+        birthday: public_metadata.birthday as string,
+        profileImage:
+          (image_url as string) ??
+          (public_metadata.profileImage as string) ??
+          '',
+      },
+      followers: [],
+      memories: [],
+      manualFollowers: [],
+    };
+    console.log({ generatedUser });
+    const newUser = await new this.userModel(generatedUser);
+    return newUser.save();
+  }
+  private async deleteUser(userData: DeletedObjectJSON) {}
+  private async updateUser(userData: UserJSON) {}
 }

@@ -1,6 +1,26 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { SchemaTypes } from 'mongoose';
-export type UserDocument = User & Document;
+
+class UserMetadata {
+  @Prop()
+  createdAt: number;
+  @Prop()
+  updatedAt: number;
+}
+class UserProfile {
+  @Prop()
+  firstName: string;
+  @Prop()
+  lastName: string;
+  @Prop()
+  isVerified: boolean;
+  @Prop()
+  birthday: string;
+  @Prop()
+  profileImage: string;
+}
+
+// base entity user class
 @Schema({
   toJSON: {
     getters: true,
@@ -10,21 +30,24 @@ export type UserDocument = User & Document;
 export class User {
   @Prop()
   clerkUserId: string;
+
   @Prop()
-  username: { type: string; unique: true };
+  username: string;
+
   @Prop()
   emailAddress: string;
+
   @Prop()
-  metadata: {
-    createdAt: number;
-    updatedAt: number;
-  };
+  metadata: UserMetadata;
+
   @Prop()
   memories: { memoryId: string }[];
+
   @Prop({
     type: [{ userId: { type: [SchemaTypes.ObjectId], ref: 'User' } }],
   })
   followers: { userId: string; since: number }[];
+
   @Prop()
   manualFollowers: {
     name: string;
@@ -32,14 +55,10 @@ export class User {
     address: string;
     postcode: string;
   }[];
+
   @Prop()
-  profile: {
-    firstName: string;
-    lastName: string;
-    isVerified: boolean;
-    birthday: string;
-    profileImage: string;
-  };
+  profile: UserProfile;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+export type UserDocument = User & Document;

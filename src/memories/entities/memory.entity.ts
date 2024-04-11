@@ -3,12 +3,7 @@ import mongoose, { Document, SchemaTypes } from 'mongoose';
 import { ASSETS_TYPE } from '../dto/create-memory.dto';
 
 export type MemoryDocument = Memory & Document;
-@Schema({
-  toJSON: {
-    getters: true,
-    virtuals: true,
-  },
-})
+
 export class MemoryAssetsParams {
   @Prop({ type: String, enum: ASSETS_TYPE })
   type: ASSETS_TYPE;
@@ -23,6 +18,13 @@ class LocationParams {
   @Prop()
   address: string;
 }
+
+@Schema({
+  toJSON: {
+    getters: true,
+    virtuals: true,
+  },
+})
 export class Memory {
   @Prop({ required: true })
   name: string;
