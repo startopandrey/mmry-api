@@ -8,7 +8,11 @@ import {
   Delete,
 } from '@nestjs/common';
 import { MyFollowersService } from './my-followers.service';
-import { CreateMyFollowerDto, UnFollowDto } from './dto/create-my-follower.dto';
+import {
+  CreateManualFollowerDto,
+  CreateMyFollowerDto,
+  UnFollowDto,
+} from './dto/create-my-follower.dto';
 import { UpdateMyFollowerDto } from './dto/update-my-follower.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { InjectModel } from '@nestjs/mongoose';
@@ -35,13 +39,12 @@ export class MyFollowersController {
   }
 
   @Post('manual-follower')
-  createManualFollower(@Body() dto: CreateMyFollowerDto) {
-    return '';
-    // return this.myFollowersService.create(createMyFollowerDto);
+  createManualFollower(@Body() dto: CreateManualFollowerDto) {
+    return this.myFollowersService.createManualFollower(dto);
   }
   @Get('manual-followers')
   getManualFollowers() {
-    return [];
+    return this.myFollowersService.getManualFollowers();
   }
   @Get()
   findAll() {

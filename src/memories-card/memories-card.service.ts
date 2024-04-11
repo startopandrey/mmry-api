@@ -29,20 +29,26 @@ export class MemoriesCardService {
       await this.memoryCardModel.create(emptyMemoriesCards);
     return memoriesWithIds;
   }
-  findAll() {
-    return `This action returns all memoriesCard`;
-  }
 
-  findOne(id: number) {
-    return `This action returns a #${id} memoriesCard`;
+  async findOne(id: string) {
+    const memoryCard = await this.memoryCardModel.findById(id);
+    return memoryCard;
   }
   async update(id: string, { assets, activatedAt }: UpdateMemoriesCardDto) {
     const memoryCard = await this.memoryCardModel.findById(id);
     memoryCard.assets = assets;
-    memoryCard.activatedAt = activatedAt;
+    memoryCard.activatedAt = activatedAt ?? getCurrentTime();
     memoryCard.updatedAt = getCurrentTime();
     await memoryCard.save();
     return memoryCard;
+  }
+  async getCardType(id: string) {
+    const memoryCard = await this.memoryCardModel.findById(id);
+    const isPlayType = !!memoryCard.assets.length;
+    if (!isPlayType) {
+      return { type: 'UPLOAD' };
+    }
+    return { type: 'PLAY' };
   }
   remove(id: number) {
     return `This action removes a #${id} memoriesCard`;

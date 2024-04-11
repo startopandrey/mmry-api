@@ -6,9 +6,6 @@ export class UpdateMemoriesCardDto {
   @IsNumber()
   @ApiProperty()
   readonly activatedAt: number;
-  @IsNumber()
-  @ApiProperty()
-  readonly updatedAt: number;
   @ApiProperty({ type: AssetsParam, isArray: true })
   readonly assets: AssetsParam[];
 }

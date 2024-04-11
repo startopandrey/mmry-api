@@ -23,6 +23,22 @@ class UserProfile {
   profileImage: string;
 }
 
+class ManualFollowers {
+  @Prop()
+  name: string;
+  @Prop()
+  birthday: number;
+  @Prop()
+  address: string;
+  @Prop()
+  postcode: string;
+}
+
+class Follower {
+  @Prop() userId: string;
+  @Prop() since: number;
+}
+
 // base entity user class
 @Schema({
   toJSON: {
@@ -49,15 +65,10 @@ export class User {
   @Prop({
     type: [{ userId: { type: [SchemaTypes.ObjectId], ref: 'User' } }],
   })
-  followers: { userId: string; since: number }[];
+  followers: Follower[];
 
   @Prop()
-  manualFollowers: {
-    name: string;
-    birthday: number;
-    address: string;
-    postcode: string;
-  }[];
+  manualFollowers: ManualFollowers[];
 
   @Prop()
   profile: UserProfile;

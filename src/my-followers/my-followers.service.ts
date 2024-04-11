@@ -3,7 +3,11 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateMyFollowerDto, UnFollowDto } from './dto/create-my-follower.dto';
+import {
+  CreateManualFollowerDto,
+  CreateMyFollowerDto,
+  UnFollowDto,
+} from './dto/create-my-follower.dto';
 import { UpdateMyFollowerDto } from './dto/update-my-follower.dto';
 
 import { InjectModel } from '@nestjs/mongoose';
@@ -43,6 +47,20 @@ export class MyFollowersService {
     return 'SUCCESS';
   }
 
+  async createManualFollower(dto: CreateManualFollowerDto) {
+    const currentUser = await this.getCurrentUserOrThrow();
+    const newManualFollower = dto;
+    console.log(currentUser);
+
+    currentUser.manualFollowers.push(newManualFollower);
+    await currentUser.save();
+    return currentUser;
+  }
+  async getManualFollowers() {
+    const currentUser = await this.getCurrentUserOrThrow();
+    const manualFollowers = currentUser.manualFollowers;
+    return manualFollowers;
+  }
   private async getCurrentUserOrThrow(): Promise<any> {
     const currentUserId = this.auth.getCurrentUserId();
 

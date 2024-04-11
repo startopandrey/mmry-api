@@ -8,9 +8,14 @@ export class CreateMyFollowerDto {
 }
 
 export class CreateManualFollowerDto {
+  @IsNotEmpty()
+  @ApiProperty()
   name: string;
+  @ApiProperty()
   birthday: number;
+  @ApiProperty()
   address: string;
+  @ApiProperty()
   postcode: string;
 }
 

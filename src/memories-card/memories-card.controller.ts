@@ -31,15 +31,13 @@ export class MemoriesCardController {
       createMemoriesCardCollectionDto,
     );
   }
-
-  @Get()
-  findAll() {
-    return this.memoriesCardService.findAll();
+  @Get('type/:id')
+  getCardType(@Param('id') id: string) {
+    return this.memoriesCardService.getCardType(id);
   }
-
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.memoriesCardService.findOne(+id);
+    return this.memoriesCardService.findOne(id);
   }
 
   @Put(':id')
