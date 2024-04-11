@@ -5,7 +5,9 @@ import { MemoriesModule } from './memories/memories.module';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MemorySchema } from './memories/entities/memory.entity';
-import { AuthService } from './auth/auth.service';
+// import { AuthService } from './auth/auth.service';
+import { MemoriesCardModule } from './memories-card/memories-card.module';
+import { MemoryCardSchema } from './memories-card/entities/memory-card.entity';
 
 @Module({
   imports: [
@@ -13,8 +15,12 @@ import { AuthService } from './auth/auth.service';
       isGlobal: true,
     }),
     MongooseModule.forRoot(process.env.DATABASE_URI),
-    MongooseModule.forFeature([{ name: 'Memory', schema: MemorySchema }]),
+    MongooseModule.forFeature([
+      { name: 'Memory', schema: MemorySchema },
+      { name: 'MemoryCard', schema: MemoryCardSchema },
+    ]),
     MemoriesModule,
+    MemoriesCardModule,
   ],
   controllers: [AppController],
   providers: [AppService],

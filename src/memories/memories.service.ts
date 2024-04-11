@@ -29,7 +29,7 @@ export class MemoriesService {
 
   async findAll(): Promise<Memory[]> {
     const currentUserId = this.auth.getCurrentUserId();
-    console.log({currentUserId})
+    console.log({ currentUserId });
     const result = await this.memoryModel.find();
     return result;
   }
