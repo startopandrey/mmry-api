@@ -8,6 +8,8 @@ import { MemorySchema } from './memories/entities/memory.entity';
 // import { AuthService } from './auth/auth.service';
 import { MemoriesCardModule } from './memories-card/memories-card.module';
 import { MemoryCardSchema } from './memories-card/entities/memory-card.entity';
+import { UsersModule } from './users/users.module';
+import { MyFollowersModule } from './my-followers/my-followers.module';
 
 @Module({
   imports: [
@@ -21,6 +23,8 @@ import { MemoryCardSchema } from './memories-card/entities/memory-card.entity';
     ]),
     MemoriesModule,
     MemoriesCardModule,
+    UsersModule,
+    MyFollowersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

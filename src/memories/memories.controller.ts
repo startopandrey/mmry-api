@@ -25,11 +25,6 @@ export class MemoriesController {
     return this.memoriesService.create(createMemoryDto);
   }
 
-  // @Get()
-  // findAll() {
-  //   return this.memoriesService.findAll();
-  // }
-
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.memoriesService.findOne(id);
