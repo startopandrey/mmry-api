@@ -6,12 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { MemoriesService } from './memories.service';
 import { CreateMemoryDto } from './dto/create-memory.dto';
 import { UpdateMemoryDto } from './dto/update-memory.dto';
 
 import { ApiTags } from '@nestjs/swagger';
+import { PageOptionsDto } from 'src/pagination/page-options.dto';
 
 @ApiTags('Memories')
 @Controller('/api/memories')
@@ -23,19 +25,19 @@ export class MemoriesController {
     return this.memoriesService.create(createMemoryDto);
   }
 
-  @Get()
-  findAll() {
-    return this.memoriesService.findAll();
-  }
+  // @Get()
+  // findAll() {
+  //   return this.memoriesService.findAll();
+  // }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.memoriesService.findOne(id);
   }
 
-  @Get(':id')
-  pagination(@Param('id') id: string) {
-    return this.memoriesService.findOne(id);
+  @Get()
+  findAll(@Query() pageOptionsDto: PageOptionsDto) {
+    return this.memoriesService.pagination(pageOptionsDto);
   }
 
   @Patch(':id')
