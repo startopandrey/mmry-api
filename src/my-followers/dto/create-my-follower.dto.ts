@@ -1,5 +1,10 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty } from 'class-validator';
+
 export class CreateMyFollowerDto {
-  clerkUserId: string;
+  @IsNotEmpty()
+  @ApiProperty()
+  userId: string;
 }
 
 export class CreateManualFollowerDto {
@@ -10,5 +15,7 @@ export class CreateManualFollowerDto {
 }
 
 export class UnFollowDto {
-  clerkUserId: string;
+  @IsNotEmpty()
+  @ApiProperty()
+  userId: string;
 }

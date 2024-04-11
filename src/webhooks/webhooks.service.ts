@@ -69,7 +69,7 @@ export class WebhooksService {
     console.log({ userData });
     const generatedUser: User = {
       clerkUserId: id,
-      username: `user_${new Date().getTime()}`,
+      username: username ?? `user_${new Date().getTime()}`,
       emailAddress: email_addresses[0].email_address,
       metadata: {
         createdAt: created_at,

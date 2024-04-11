@@ -65,4 +65,5 @@ export class Memory {
     ref: 'Category';
   }[];
 }
+
 export const MemorySchema = SchemaFactory.createForClass(Memory);

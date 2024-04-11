@@ -1,12 +1,15 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { SchemaTypes } from 'mongoose';
 
+export type UserDocument = User & Document;
+
 class UserMetadata {
   @Prop()
   createdAt: number;
   @Prop()
   updatedAt: number;
 }
+
 class UserProfile {
   @Prop()
   firstName: string;
@@ -61,4 +64,3 @@ export class User {
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
-export type UserDocument = User & Document;

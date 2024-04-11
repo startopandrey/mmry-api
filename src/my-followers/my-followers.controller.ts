@@ -10,22 +10,28 @@ import {
 import { MyFollowersService } from './my-followers.service';
 import { CreateMyFollowerDto, UnFollowDto } from './dto/create-my-follower.dto';
 import { UpdateMyFollowerDto } from './dto/update-my-follower.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { User, UserDocument } from 'src/users/entities/user.entity';
 
 @ApiTags('My Followers')
+@ApiBearerAuth('JWT')
 @Controller('api/my-followers')
 export class MyFollowersController {
-  constructor(private readonly myFollowersService: MyFollowersService) {}
+  constructor(
+    @InjectModel(User.name)
+    private readonly userModel: Model<UserDocument>,
+    private readonly myFollowersService: MyFollowersService,
+  ) {}
 
   @Post('follow')
   follow(@Body() dto: CreateMyFollowerDto) {
-    return '';
-    // return this.myFollowersService.create(createMyFollowerDto);
+    return this.myFollowersService.follow(dto);
   }
   @Post('unfollow')
   unFollow(@Body() dto: UnFollowDto) {
-    return '';
-    // return this.myFollowersService.create(createMyFollowerDto);
+    return this.myFollowersService.unFollow(dto);
   }
 
   @Post('manual-follower')

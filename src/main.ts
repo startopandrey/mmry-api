@@ -13,9 +13,17 @@ async function bootstrap() {
     .addServer('https://staging.yourapi.com/', 'Staging')
     .addServer('https://production.yourapi.com/', 'Production')
     .addTag('MMRY')
+    .addBearerAuth(
+      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+      'JWT',
+    )
     .build();
   const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup('api-docs', app, document);
+  SwaggerModule.setup('api-docs', app, document, {
+    swaggerOptions: {
+      persistAuthorization: true,
+    },
+  });
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   await app.listen(3000);
 }
