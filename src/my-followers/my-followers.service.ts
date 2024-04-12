@@ -62,7 +62,7 @@ export class MyFollowersService {
     return manualFollowers;
   }
   private async getCurrentUserOrThrow(): Promise<any> {
-    const currentUserId = this.auth.getCurrentUserId();
+    const currentUserId = await this.auth.getCurrentUserId();
 
     const currentUser = await this.userModel.findById(currentUserId);
     if (!currentUser) {

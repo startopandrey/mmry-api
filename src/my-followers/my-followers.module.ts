@@ -16,7 +16,7 @@ import forFeatureDb from 'src/db/for-feature.db';
     MyFollowersService,
     {
       provide: AuthServiceBase,
-      useClass: FakeAuthService,
+      useClass: AuthService,
     },
   ],
 })
