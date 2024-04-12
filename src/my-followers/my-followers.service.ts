@@ -44,13 +44,13 @@ export class MyFollowersService {
       (follower) => follower.userId != unFollowedUserId,
     );
     await currentUser.save();
+    console.log(currentUser, unFollowedUserId)
     return 'SUCCESS';
   }
 
   async createManualFollower(dto: CreateManualFollowerDto) {
     const currentUser = await this.getCurrentUserOrThrow();
     const newManualFollower = dto;
-    console.log(currentUser);
 
     currentUser.manualFollowers.push(newManualFollower);
     await currentUser.save();
@@ -71,9 +71,9 @@ export class MyFollowersService {
   }
   async findAll() {
     const currentUser = await this.getCurrentUserOrThrow();
-    const userFollowedIds = currentUser?.followers.filter((value)=> value.clerkUserId);
+    const userFollowedIds = currentUser?.followers.map((e) => e.userId);
     const followedUsers = await this.userModel.find({
-      clerkUserId: { $in: userFollowedIds },
+      _id: { $in: userFollowedIds },
     });
     return followedUsers;
   }
