@@ -12,7 +12,7 @@ class CreateCategoryDto {
   category: string;
 }
 @ApiTags('Categories')
-@Controller('categories')
+@Controller('api/v1/categories')
 export class CategoriesController {
   constructor(
     @InjectModel(Category.name)

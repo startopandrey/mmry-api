@@ -21,7 +21,7 @@ import { User, UserDocument } from 'src/users/entities/user.entity';
 
 @ApiTags('My Followers')
 @ApiBearerAuth('JWT')
-@Controller('api/my-followers')
+@Controller('api/v1/my-followers')
 export class MyFollowersController {
   constructor(
     @InjectModel(User.name)

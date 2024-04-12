@@ -7,7 +7,7 @@ import { PageDto } from 'src/pagination/pagination.dto';
 import { UserDto } from './dto/create-user.dto';
 
 @ApiTags('Users')
-@Controller('api/users')
+@Controller('api/v1/users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 

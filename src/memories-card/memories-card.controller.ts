@@ -14,7 +14,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { CreateMemoriesCardCollectionDto } from './dto/create-memories-card-collection.dto';
 
 @ApiTags('Memories Cards')
-@Controller('/api/memories-card')
+@Controller('api/v1/memories-card')
 export class MemoriesCardController {
   constructor(private readonly memoriesCardService: MemoriesCardService) {}
 
