@@ -14,6 +14,8 @@ import { CreateMemoryDto } from './dto/create-memory.dto';
 import { UpdateMemoryDto } from './dto/update-memory.dto';
 
 import { ApiTags } from '@nestjs/swagger';
+import { PageDto } from 'src/pagination/pagination.dto';
+import { SearchQuery } from 'src/users/dto/search.query';
 
 @ApiTags('Memories')
 @Controller('api/v1/memories')
@@ -25,6 +27,10 @@ export class MemoriesController {
     return this.memoriesService.create(createMemoryDto);
   }
 
+  @Get('search')
+  search(@Query() query: SearchQuery): Promise<PageDto<CreateMemoryDto>> {
+    return this.memoriesService.search(query);
+  }
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.memoriesService.findOne(id);

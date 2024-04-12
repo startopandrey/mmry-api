@@ -9,6 +9,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { PageDto } from 'src/pagination/pagination.dto';
 import { PageMetaDto } from 'src/pagination/pagination-meta.dto';
 import { PaginationQuery } from 'src/pagination/pagination-options.dto';
+import { SearchQuery } from './dto/search.query';
 
 @Injectable()
 export class MemoriesService {
@@ -31,12 +32,31 @@ export class MemoriesService {
   }
 
   async findAll(): Promise<Memory[]> {
-    // const currentUserId = this.auth.getCurrentUserId();
-    // console.log({ currentUserId });
     const result = await this.memoryModel.find();
     return result;
   }
+  async search(query: SearchQuery): Promise<PageDto<any>> {
+    const currentUserId = await this.auth.getCurrentUserId();
+    console.log(query.keyword);
+    const findQuery = query.keyword
+      ? {
+          name: { $regex: query.keyword, $options: 'i' },
+        }
+      : {};
+    const findOptions = {
+      ...findQuery,
+      authorClerkId: 'user_2egP7d70DEZsDc80Anbx8IVkkXc',
+    };
+    const itemCount = await this.memoryModel.find(findOptions).countDocuments();
+    const entities = await this.memoryModel
+      .find(findOptions)
+      .sort({ date: query.order })
+      .limit(query.take)
+      .skip(query.skip);
 
+    const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto: query });
+    return new PageDto(entities, pageMetaDto);
+  }
   async pagination(pageOptionsDto: PaginationQuery): Promise<PageDto<any>> {
     console.log(pageOptionsDto.page);
     const entities = await this.memoryModel

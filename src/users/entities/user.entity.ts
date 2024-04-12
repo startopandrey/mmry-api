@@ -67,7 +67,11 @@ export class User {
   })
   followers: Follower[];
 
-  @Prop()
+  @Prop({
+    type: [
+      { name: String, birthday: String, address: String, postcode: String },
+    ],
+  })
   manualFollowers: ManualFollowers[];
 
   @Prop()

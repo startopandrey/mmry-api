@@ -24,3 +24,9 @@ export class UnFollowDto {
   @ApiProperty()
   userId: string;
 }
+
+export class RemoveManualFollowerDto {
+  @IsNotEmpty()
+  @ApiProperty()
+  userId: string;
+}

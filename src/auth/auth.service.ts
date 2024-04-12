@@ -19,7 +19,7 @@ export class AuthService implements AuthServiceBase {
     const headerValue = this.request.headers['authorization'];
     if (!headerValue) {
       console.warn('No JWT');
-      return null;
+      return '';
     }
     const clerkUserId = headerValue.replace('Bearer ', '');
     const currentUser = await this.userModel.findOne({

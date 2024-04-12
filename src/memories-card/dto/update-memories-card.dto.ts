@@ -1,8 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { AssetsParam } from 'src/memories/dto/create-memory.dto';
 
 export class UpdateMemoriesCardDto {
+  @IsString()
+  @ApiProperty()
+  @IsNotEmpty()
+  readonly id: string;
   @IsNumber()
   @ApiProperty()
   readonly activatedAt: number;

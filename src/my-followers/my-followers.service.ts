@@ -56,10 +56,26 @@ export class MyFollowersService {
     await currentUser.save();
     return currentUser;
   }
+  async removeManualFollower({ userId: unFollowedUserId }) {
+    const currentUser = await this.getCurrentUserOrThrow();
+    currentUser.manualFollowers = currentUser.manualFollowers.filter(
+      (follower) => follower._id != unFollowedUserId,
+    );
+    await currentUser.save();
+    return 'SUCCESS';
+  }
   async getManualFollowers() {
     const currentUser = await this.getCurrentUserOrThrow();
     const manualFollowers = currentUser.manualFollowers;
     return manualFollowers;
+  }
+  async findAll() {
+    const currentUser = await this.getCurrentUserOrThrow();
+    const userFollowedIds = currentUser?.followers.filter((value)=> value.clerkUserId);
+    const followedUsers = await this.userModel.find({
+      clerkUserId: { $in: userFollowedIds },
+    });
+    return followedUsers;
   }
   private async getCurrentUserOrThrow(): Promise<any> {
     const currentUserId = await this.auth.getCurrentUserId();
@@ -69,10 +85,6 @@ export class MyFollowersService {
       throw new NotFoundException('User not found');
     }
     return currentUser;
-  }
-
-  findAll() {
-    return `This action returns all myFollowers`;
   }
 
   findOne(id: number) {

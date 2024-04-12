@@ -11,6 +11,7 @@ import { MyFollowersService } from './my-followers.service';
 import {
   CreateManualFollowerDto,
   CreateMyFollowerDto,
+  RemoveManualFollowerDto,
   UnFollowDto,
 } from './dto/create-my-follower.dto';
 import { UpdateMyFollowerDto } from './dto/update-my-follower.dto';
@@ -38,9 +39,13 @@ export class MyFollowersController {
     return this.myFollowersService.unFollow(dto);
   }
 
-  @Post('manual-follower')
-  createManualFollower(@Body() dto: CreateManualFollowerDto) {
+  @Post('follow/manual-follower')
+  followManualFollower(@Body() dto: CreateManualFollowerDto) {
     return this.myFollowersService.createManualFollower(dto);
+  }
+  @Post('unfollow/manual-follower')
+  removeManualFollower(@Body() dto: RemoveManualFollowerDto) {
+    return this.myFollowersService.removeManualFollower(dto);
   }
   @Get('manual-followers')
   getManualFollowers() {

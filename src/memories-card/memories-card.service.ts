@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadGatewayException, Injectable } from '@nestjs/common';
 import { CreateMemoriesCardDto } from './dto/create-memories-card.dto';
 import { UpdateMemoriesCardDto } from './dto/update-memories-card.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -9,6 +9,7 @@ import {
   generateSixDigitNumber,
   getCurrentTime,
 } from 'src/helper/index.helper';
+import { PlayMemoriesCard } from './dto/play-memories-card.dto';
 
 @Injectable()
 export class MemoriesCardService {
@@ -21,6 +22,7 @@ export class MemoriesCardService {
     return newMemoryCard.save();
   }
   async createCollection({ quantity }: CreateMemoriesCardCollectionDto) {
+    console.log({ quantity });
     const emptyMemoriesCards = Array.from({ length: quantity }, () => {
       const password = generateSixDigitNumber();
       return { password, createdAt: getCurrentTime() };
@@ -34,13 +36,20 @@ export class MemoriesCardService {
     const memoryCard = await this.memoryCardModel.findById(id);
     return memoryCard;
   }
-  async update(id: string, { assets, activatedAt }: UpdateMemoriesCardDto) {
+  async update({ id, assets, activatedAt }: UpdateMemoriesCardDto) {
     const memoryCard = await this.memoryCardModel.findById(id);
     memoryCard.assets = assets;
     memoryCard.activatedAt = activatedAt ?? getCurrentTime();
     memoryCard.updatedAt = getCurrentTime();
     await memoryCard.save();
     return memoryCard;
+  }
+  async play({ id, password }: PlayMemoriesCard) {
+    const memory = await this.memoryCardModel.findOne({ _id: id });
+    if (!password || memory.password.toString() !== password.toString()) {
+      return new BadGatewayException('Wrong password');
+    }
+    return memory;
   }
   async getCardType(id: string) {
     const memoryCard = await this.memoryCardModel.findById(id);
