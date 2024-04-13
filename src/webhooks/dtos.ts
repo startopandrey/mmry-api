@@ -1,4 +1,4 @@
-import { WebhookEventType } from '@clerk/backend';
+export type WebhookEventType = any;
 
 export interface ClerkPayload {
   type: WebhookEventType;

@@ -1,11 +1,15 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ClerkPayload, ClerkSignatureInfo } from './dtos';
-import { DeletedObjectJSON, UserJSON, WebhookEvent } from '@clerk/backend';
+//import { DeletedObjectJSON, UserJSON, WebhookEvent } from '@clerk/backend';
 import { Webhook } from 'svix';
 import { ConfigService } from '@nestjs/config';
 import { User, UserDocument } from 'src/users/entities/user.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+
+export type DeletedObjectJSON = any;
+export type UserJSON = any;
+export type WebhookEvent = any;
 
 @Injectable()
 export class WebhooksService {
