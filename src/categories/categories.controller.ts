@@ -23,7 +23,7 @@ export class CategoriesController {
     return dto;
   }
   @Get()
-  async findAll() {
+  async findAll(): Promise<CreateCategoryDto[]> {
     const allCategories = await this.categoryModel.find();
     return allCategories;
   }

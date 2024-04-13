@@ -27,6 +27,7 @@ export class UsersService {
     const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto: query });
     const usersDtos = foundUsers.map((u) => ({
       id: u._id.toString(),
+      clerkUserId: u.clerkUserId,
       username: u.username,
       firstName: u.profile.firstName,
       lastName: u.profile.lastName ?? '',

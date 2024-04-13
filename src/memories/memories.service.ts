@@ -22,11 +22,8 @@ export class MemoriesService {
     console.log(configService.get('DATABASE_URI'));
   }
   create(createMemoryDto: CreateMemoryDto) {
-    console.log(createMemoryDto);
-    const newMemory = this.memoryModel.create({
-      name: createMemoryDto.name,
-      note: createMemoryDto.note,
-    });
+    console.log({ createMemoryDto });
+    const newMemory = this.memoryModel.create(createMemoryDto);
 
     return newMemory;
   }
@@ -70,18 +67,19 @@ export class MemoriesService {
   }
 
   async findOne(id: string) {
-    const memory = await this.memoryModel.findById(id);
-    // .populate({
-    //   path: 'categories',
-    //   model: 'Category',
-    //   select: ['category'],X
-    // })
-    // .populate({
-    //   path: 'user',
-    //   model: 'User',
-    // select: ['category'],
-    // })
-    // .exec();
+    console.log({ id });
+    const memory = await this.memoryModel
+      .findById(id)
+      .populate({
+        path: 'categories',
+        model: 'Category',
+      })
+      .populate({
+        path: 'mentioned',
+        model: 'User',
+      })
+      .exec();
+
     return memory;
   }
 
