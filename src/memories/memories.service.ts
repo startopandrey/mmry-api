@@ -24,7 +24,6 @@ export class MemoriesService {
   create(createMemoryDto: CreateMemoryDto) {
     console.log({ createMemoryDto });
     const newMemory = this.memoryModel.create(createMemoryDto);
-
     return newMemory;
   }
 
@@ -33,8 +32,7 @@ export class MemoriesService {
     return result;
   }
   async search(query: SearchQuery): Promise<PageDto<any>> {
-    const currentUserId = await this.auth.getCurrentUserId();
-    console.log(query.keyword);
+    const currentUserClerkId = await this.auth.getCurrentUserClerkId();
     const findQuery = query.keyword
       ? {
           name: { $regex: query.keyword, $options: 'i' },
@@ -42,7 +40,7 @@ export class MemoriesService {
       : {};
     const findOptions = {
       ...findQuery,
-      authorClerkId: 'user_2egP7d70DEZsDc80Anbx8IVkkXc',
+      authorClerkId: currentUserClerkId,
     };
     const itemCount = await this.memoryModel.find(findOptions).countDocuments();
     const entities = await this.memoryModel
@@ -50,9 +48,15 @@ export class MemoriesService {
       .sort({ date: query.order })
       .limit(query.take)
       .skip(query.skip);
-
+    const populatedMemories = await Promise.all(
+      entities.map(async (memory) => ({
+        ...memory.toObject(),
+        id: memory._id,
+        categories: await this.populateMemoryCategories(memory.categories),
+      })),
+    );
     const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto: query });
-    return new PageDto(entities, pageMetaDto);
+    return new PageDto(populatedMemories, pageMetaDto);
   }
   async pagination(pageOptionsDto: PaginationQuery): Promise<PageDto<any>> {
     console.log(pageOptionsDto.page);
@@ -67,22 +71,34 @@ export class MemoriesService {
   }
 
   async findOne(id: string) {
-    console.log({ id });
     const memory = await this.memoryModel
       .findById(id)
-      .populate({
-        path: 'categories',
-        model: 'Category',
-      })
       .populate({
         path: 'mentioned',
         model: 'User',
       })
       .exec();
-
-    return memory;
+    const populatedCategories = await this.populateMemoryCategories(
+      memory.categories,
+    );
+    const transformedMemory = {
+      ...memory.toObject(),
+      categories: populatedCategories,
+    };
+    return transformedMemory;
   }
-
+  async populateMemoryCategories(memoryCategories) {
+    const currentUserCategories = await this.getCurrentUserCategories();
+    const populatedCategories = currentUserCategories.filter((category: any) =>
+      memoryCategories.includes(category._id),
+    );
+    return populatedCategories;
+  }
+  async getCurrentUserCategories() {
+    const currentUser = this.auth.getCurrentUserOrThrow();
+    const currentCategories = (await currentUser).categories;
+    return currentCategories;
+  }
   update(id: number, updateMemoryDto: UpdateMemoryDto) {
     return `This action updates a #${id} memory`;
   }

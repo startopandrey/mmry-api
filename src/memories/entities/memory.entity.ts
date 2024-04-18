@@ -59,11 +59,8 @@ export class Memory {
 
   @Prop()
   note: string;
-  @Prop({ type: [SchemaTypes.ObjectId], ref: 'Category' })
-  categories: {
-    type: mongoose.Schema.Types.ObjectId;
-    ref: 'Category';
-  }[];
+  @Prop({ type: [SchemaTypes.ObjectId] })
+  categories: string[];
 }
 
 export const MemorySchema = SchemaFactory.createForClass(Memory);
