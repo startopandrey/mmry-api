@@ -89,6 +89,7 @@ export class WebhooksService {
           (public_metadata.profileImage as string) ??
           '',
       },
+      categories: [],
       followers: [],
       memories: [],
       manualFollowers: [],

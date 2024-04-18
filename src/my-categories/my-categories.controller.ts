@@ -10,8 +10,11 @@ import {
 import { MyCategoriesService } from './my-categories.service';
 import { CreateMyCategoryDto } from './dto/create-my-category.dto';
 import { UpdateMyCategoryDto } from './dto/update-my-category.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
-@Controller('my-categories')
+@ApiTags('My Categories')
+@ApiBearerAuth('JWT')
+@Controller('api/v1/my-categories')
 export class MyCategoriesController {
   constructor(private readonly myCategoriesService: MyCategoriesService) {}
 

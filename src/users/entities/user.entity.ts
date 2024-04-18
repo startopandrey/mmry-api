@@ -1,8 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { SchemaTypes } from 'mongoose';
+import mongoose, { Mongoose, SchemaTypes, Types } from 'mongoose';
 
-export type UserDocument = User & Document;
+export type UserDocument = User & mongoose.Document;
 
+class WithIds {
+  _id: string;
+  id: string;
+}
 class UserMetadata {
   @Prop()
   createdAt: number;
@@ -33,12 +37,17 @@ class ManualFollowers {
   @Prop()
   postcode: string;
 }
-
+@Schema()
 class Follower {
   @Prop() userId: string;
   @Prop() since: number;
 }
-
+@Schema()
+class Category {
+  @Prop()
+  category: string;
+  @Prop() color: string;
+}
 // base entity user class
 @Schema({
   toJSON: {
@@ -67,9 +76,17 @@ export class User {
   })
   followers: Follower[];
 
+  @Prop({ type: [Category] })
+  categories: Category[];
+
   @Prop({
     type: [
-      { name: String, birthday: String, address: String, postcode: String },
+      {
+        name: String,
+        birthday: Number,
+        address: String,
+        postcode: String,
+      },
     ],
   })
   manualFollowers: ManualFollowers[];
@@ -77,5 +94,4 @@ export class User {
   @Prop()
   profile: UserProfile;
 }
-
 export const UserSchema = SchemaFactory.createForClass(User);

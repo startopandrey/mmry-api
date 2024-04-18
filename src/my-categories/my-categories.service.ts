@@ -4,19 +4,25 @@ import { UpdateMyCategoryDto } from './dto/update-my-category.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from 'src/users/entities/user.entity';
 import { Model } from 'mongoose';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class MyCategoriesService {
   constructor(
     @InjectModel(User.name)
     private readonly userModel: Model<UserDocument>,
+    private readonly auth: AuthService,
   ) {}
-  create(createMyCategoryDto: CreateMyCategoryDto) {
-    return 'This action adds a new myCategory';
+  async create(dto: CreateMyCategoryDto) {
+    const currentUser = await this.auth.getCurrentUserOrThrow();
+    currentUser.categories.push(dto);
+    await currentUser.save();
+    return 'SUCCESS';
   }
 
-  findAll() {
-    return `This action returns all myCategories`;
+  async findAll() {
+    const currentUser = await this.auth.getCurrentUserOrThrow();
+    return currentUser.categories;
   }
 
   findOne(id: number) {

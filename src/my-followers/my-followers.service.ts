@@ -23,7 +23,7 @@ export class MyFollowersService {
     private readonly auth: AuthServiceBase,
   ) {}
   async follow({ userId: followedUserId }: CreateMyFollowerDto) {
-    const currentUser = await this.getCurrentUserOrThrow();
+    const currentUser = await this.auth.getCurrentUserOrThrow();
     if (currentUser._id === followedUserId) {
       throw new BadRequestException('You cannot follow yourself');
     }
@@ -39,17 +39,17 @@ export class MyFollowersService {
     return 'SUCCESS';
   }
   async unFollow({ userId: unFollowedUserId }: UnFollowDto) {
-    const currentUser = await this.getCurrentUserOrThrow();
+    const currentUser = await this.auth.getCurrentUserOrThrow();
     currentUser.followers = currentUser.followers.filter(
       (follower) => follower.userId != unFollowedUserId,
     );
     await currentUser.save();
-    console.log(currentUser, unFollowedUserId)
+    console.log(currentUser, unFollowedUserId);
     return 'SUCCESS';
   }
 
   async createManualFollower(dto: CreateManualFollowerDto) {
-    const currentUser = await this.getCurrentUserOrThrow();
+    const currentUser = await this.auth.getCurrentUserOrThrow();
     const newManualFollower = dto;
 
     currentUser.manualFollowers.push(newManualFollower);
@@ -57,7 +57,7 @@ export class MyFollowersService {
     return currentUser;
   }
   async removeManualFollower({ userId: unFollowedUserId }) {
-    const currentUser = await this.getCurrentUserOrThrow();
+    const currentUser = await this.auth.getCurrentUserOrThrow();
     currentUser.manualFollowers = currentUser.manualFollowers.filter(
       (follower) => follower._id != unFollowedUserId,
     );
@@ -65,28 +65,18 @@ export class MyFollowersService {
     return 'SUCCESS';
   }
   async getManualFollowers() {
-    const currentUser = await this.getCurrentUserOrThrow();
+    const currentUser = await this.auth.getCurrentUserOrThrow();
     const manualFollowers = currentUser.manualFollowers;
     return manualFollowers;
   }
   async findAll() {
-    const currentUser = await this.getCurrentUserOrThrow();
+    const currentUser = await this.auth.getCurrentUserOrThrow();
     const userFollowedIds = currentUser?.followers.map((e) => e.userId);
     const followedUsers = await this.userModel.find({
       _id: { $in: userFollowedIds },
     });
     return followedUsers;
   }
-  private async getCurrentUserOrThrow(): Promise<any> {
-    const currentUserId = await this.auth.getCurrentUserId();
-
-    const currentUser = await this.userModel.findById(currentUserId);
-    if (!currentUser) {
-      throw new NotFoundException('User not found');
-    }
-    return currentUser;
-  }
-
   findOne(id: number) {
     return `This action returns a #${id} myFollower`;
   }
