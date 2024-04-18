@@ -13,11 +13,12 @@ import { MemoriesService } from './memories.service';
 import { CreateMemoryDto } from './dto/create-memory.dto';
 import { UpdateMemoryDto } from './dto/update-memory.dto';
 
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { PageDto } from 'src/pagination/pagination.dto';
 import { SearchQuery } from 'src/users/dto/search.query';
 
 @ApiTags('Memories')
+@ApiBearerAuth('JWT')
 @Controller('api/v1/memories')
 export class MemoriesController {
   constructor(private readonly memoriesService: MemoriesService) {}
