@@ -8,6 +8,7 @@ import {
   Param,
   Delete,
   Query,
+  ValidationPipe,
 } from '@nestjs/common';
 import { MemoriesService } from './memories.service';
 import { CreateMemoryDto } from './dto/create-memory.dto';
@@ -15,7 +16,8 @@ import { UpdateMemoryDto } from './dto/update-memory.dto';
 
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { PageDto } from 'src/pagination/pagination.dto';
-import { SearchQuery } from 'src/users/dto/search.query';
+import { SearchQuery } from './dto/search.query';
+
 
 @ApiTags('Memories')
 @ApiBearerAuth('JWT')
@@ -29,7 +31,9 @@ export class MemoriesController {
   }
 
   @Get('search')
-  search(@Query() query: SearchQuery): Promise<PageDto<CreateMemoryDto>> {
+  search(
+    @Query(new ValidationPipe({ transform: true })) query: SearchQuery,
+  ): Promise<PageDto<CreateMemoryDto>> {
     return this.memoriesService.search(query);
   }
   @Get(':id')
