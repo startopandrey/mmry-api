@@ -33,13 +33,21 @@ export class MemoriesService {
   }
   async search(query: SearchQuery): Promise<PageDto<any>> {
     const currentUserClerkId = await this.auth.getCurrentUserClerkId();
-    const findQuery = query.keyword
+    console.log({ query });
+    const findByKeyword = query.keyword
       ? {
           name: { $regex: query.keyword, $options: 'i' },
         }
       : {};
+    console.log(query.categories)
+    const findByCategories = query.categories
+      ? {
+          categories: { $in: query.categories },
+        }
+      : {};
     const findOptions = {
-      ...findQuery,
+      ...findByKeyword,
+      ...findByCategories,
       authorClerkId: currentUserClerkId,
     };
     const itemCount = await this.memoryModel.find(findOptions).countDocuments();
