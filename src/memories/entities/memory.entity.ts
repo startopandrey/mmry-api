@@ -50,12 +50,7 @@ export class Memory {
   mentioned: string[];
 
   @Prop()
-  mentionedManually: {
-    name: string;
-    birthday: string;
-    postcode: string;
-    address: string;
-  }[];
+  mentionedManually: string[];
 
   @Prop()
   note: string;

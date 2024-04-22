@@ -8,10 +8,19 @@ export class SearchQuery extends PaginationQuery {
   @IsOptional()
   keyword?: string;
 
+  @ApiPropertyOptional()
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
   @Type(() => String)
   @Transform(({ value }) => value.toString().split(','))
   categories?: string[];
+  
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  @Type(() => String)
+  @Transform(({ value }) => value.toString().split(','))
+  followers?: string[];
 }
