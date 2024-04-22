@@ -32,30 +32,57 @@ export class MemoriesService {
     return result;
   }
   async search(query: SearchQuery): Promise<PageDto<any>> {
-    const currentUserClerkId = await this.auth.getCurrentUserClerkId();
-    console.log({ query });
+    console.log(query);
+    const currentUser = await this.auth.getCurrentUserOrThrow();
+    const currentManualFollowerIds = currentUser.manualFollowers.map((e: any) =>
+      e._id.toString(),
+    );
+    const queryFollowerIds = query.followers?.filter(Boolean);
+    const transformedCategoriesIds = query.categories?.filter(Boolean);
+    const queryMyFollowerIds = queryFollowerIds?.filter(
+      (queryFollowerId: string) =>
+        !currentManualFollowerIds.includes(queryFollowerId),
+    );
+    const queryManualFollowerIds = queryFollowerIds?.filter(
+      (queryFollowerId: string) =>
+        currentManualFollowerIds.includes(queryFollowerId),
+    );
+    console.log({ queryManualFollowerIds, queryMyFollowerIds });
     const findByKeyword = query.keyword
       ? {
           name: { $regex: query.keyword, $options: 'i' },
         }
       : {};
-    console.log(query.categories)
-    const findByCategories = query.categories
+    const findByCategories = transformedCategoriesIds?.length
       ? {
-          categories: { $in: query.categories },
+          categories: { $in: transformedCategoriesIds },
+        }
+      : {};
+    const findByMyFollowers = queryMyFollowerIds?.length
+      ? {
+          mentioned: { $in: queryMyFollowerIds },
+        }
+      : {};
+    const findByManualFollowers = queryManualFollowerIds?.length
+      ? {
+          mentionedManually: { $in: queryManualFollowerIds },
         }
       : {};
     const findOptions = {
       ...findByKeyword,
       ...findByCategories,
-      authorClerkId: currentUserClerkId,
+      ...findByMyFollowers,
+      ...findByManualFollowers,
+      authorClerkId: currentUser.clerkUserId,
     };
     const itemCount = await this.memoryModel.find(findOptions).countDocuments();
+
     const entities = await this.memoryModel
       .find(findOptions)
       .sort({ date: query.order })
       .limit(query.take)
       .skip(query.skip);
+
     const populatedMemories = await Promise.all(
       entities.map(async (memory) => ({
         ...memory.toObject(),
@@ -79,6 +106,7 @@ export class MemoriesService {
   }
 
   async findOne(id: string) {
+    const currentUser = await this.auth.getCurrentUserOrThrow();
     const memory = await this.memoryModel
       .findById(id)
       .populate({
@@ -86,12 +114,19 @@ export class MemoriesService {
         model: 'User',
       })
       .exec();
+    const manualFollowerIds = memory.mentionedManually;
+
+    const populatedManualFollowers = currentUser.manualFollowers.filter(
+      (e: any) => manualFollowerIds.includes(e._id),
+    );
+    console.log({ populatedManualFollowers });
     const populatedCategories = await this.populateMemoryCategories(
       memory.categories,
     );
     const transformedMemory = {
       ...memory.toObject(),
       categories: populatedCategories,
+      mentionedManually: populatedManualFollowers,
     };
     return transformedMemory;
   }
