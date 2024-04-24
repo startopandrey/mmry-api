@@ -18,7 +18,6 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { PageDto } from 'src/pagination/pagination.dto';
 import { SearchQuery } from './dto/search.query';
 
-
 @ApiTags('Memories')
 @ApiBearerAuth('JWT')
 @Controller('api/v1/memories')
