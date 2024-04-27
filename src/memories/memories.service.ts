@@ -142,8 +142,12 @@ export class MemoriesService {
     const currentCategories = (await currentUser).categories;
     return currentCategories;
   }
-  update(id: number, updateMemoryDto: UpdateMemoryDto) {
-    return `This action updates a #${id} memory`;
+  async update(id: string, updateMemoryDto: UpdateMemoryDto) {
+    const updatedMemory = await this.memoryModel.findByIdAndUpdate(
+      id,
+      updateMemoryDto,
+    );
+    return updatedMemory;
   }
 
   remove(id: number) {
