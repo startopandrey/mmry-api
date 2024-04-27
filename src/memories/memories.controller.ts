@@ -9,6 +9,7 @@ import {
   Delete,
   Query,
   ValidationPipe,
+  Put,
 } from '@nestjs/common';
 import { MemoriesService } from './memories.service';
 import { CreateMemoryDto } from './dto/create-memory.dto';
@@ -45,9 +46,9 @@ export class MemoriesController {
     return this.memoriesService.pagination(pageOptionsDto);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id') id: string, @Body() updateMemoryDto: UpdateMemoryDto) {
-    return this.memoriesService.update(+id, updateMemoryDto);
+    return this.memoriesService.update(id, updateMemoryDto);
   }
 
   @Delete(':id')
