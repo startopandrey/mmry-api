@@ -41,10 +41,11 @@ export class MyCategoriesService {
     currentUser.categories = currentUser.categories.filter(
       (item: any) => item._id != id,
     );
-    const memories = await this.memoryModel.updateMany(
+    await currentUser.save();
+    await this.memoryModel.updateMany(
       { categories: { $in: id } },
       { $pull: { categories: { $in: [id] } } },
     );
-    return memories;
+    return 'SUCCESS';
   }
 }
