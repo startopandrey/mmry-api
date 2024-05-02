@@ -5,6 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from 'src/users/entities/user.entity';
 import { Model } from 'mongoose';
 import { AuthService } from 'src/auth/auth.service';
+import { Memory, MemoryDocument } from 'src/memories/entities/memory.entity';
 
 @Injectable()
 export class MyCategoriesService {
@@ -12,6 +13,8 @@ export class MyCategoriesService {
     @InjectModel(User.name)
     private readonly userModel: Model<UserDocument>,
     private readonly auth: AuthService,
+    @InjectModel(Memory.name)
+    private readonly memoryModel: Model<MemoryDocument>,
   ) {}
   async create(dto: CreateMyCategoryDto) {
     const currentUser = await this.auth.getCurrentUserOrThrow();
@@ -33,7 +36,15 @@ export class MyCategoriesService {
     return `This action updates a #${id} myCategory`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} myCategory`;
+  async remove(id: string) {
+    const currentUser = await this.auth.getCurrentUserOrThrow();
+    currentUser.categories = currentUser.categories.filter(
+      (item: any) => item._id != id,
+    );
+    const memories = await this.memoryModel.updateMany(
+      { categories: { $in: id } },
+      { $pull: { categories: { $in: [id] } } },
+    );
+    return memories;
   }
 }

@@ -18,9 +18,7 @@ export class MemoriesService {
     @InjectModel(Memory.name)
     private readonly memoryModel: Model<MemoryDocument>,
     private readonly auth: AuthService,
-  ) {
-    console.log(configService.get('DATABASE_URI'));
-  }
+  ) {}
   create(createMemoryDto: CreateMemoryDto) {
     console.log({ createMemoryDto });
     const newMemory = this.memoryModel.create(createMemoryDto);
@@ -93,6 +91,18 @@ export class MemoriesService {
     const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto: query });
     return new PageDto(populatedMemories, pageMetaDto);
   }
+  async countAll() {
+    const currentUser = await this.auth.getCurrentUserOrThrow();
+    const countMemories = await this.memoryModel
+      .find({ authorClerkId: currentUser.clerkUserId })
+      .populate({
+        path: 'mentioned',
+        model: 'User',
+      })
+      .countDocuments()
+      .exec();
+    return { itemsCount: countMemories };
+  }
   async pagination(pageOptionsDto: PaginationQuery): Promise<PageDto<any>> {
     console.log(pageOptionsDto.page);
     const entities = await this.memoryModel
@@ -150,7 +160,8 @@ export class MemoriesService {
     return updatedMemory;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} memory`;
+  async remove(id: string) {
+    await this.memoryModel.findByIdAndDelete(id);
+    return 'SUCCESS';
   }
 }
