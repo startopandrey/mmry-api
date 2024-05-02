@@ -36,6 +36,10 @@ export class MemoriesController {
   ): Promise<PageDto<CreateMemoryDto>> {
     return this.memoriesService.search(query);
   }
+  @Get('count-all')
+  countAll(): Promise<{ itemsCount: number }> {
+    return this.memoriesService.countAll();
+  }
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.memoriesService.findOne(id);
@@ -53,6 +57,6 @@ export class MemoriesController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.memoriesService.remove(+id);
+    return this.memoriesService.remove(id);
   }
 }
