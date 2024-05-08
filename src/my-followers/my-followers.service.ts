@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import {
   CreateManualFollowerDto,
   CreateMyFollowerDto,
@@ -77,7 +73,7 @@ export class MyFollowersService {
     });
     return followedUsers;
   }
-  findOne(id: number) {
+  async findOne(id: string) {
     return `This action returns a #${id} myFollower`;
   }
 
