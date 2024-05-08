@@ -6,6 +6,7 @@ import { User, UserDocument } from './entities/user.entity';
 import { PageMetaDto } from 'src/pagination/pagination-meta.dto';
 import { PageDto } from 'src/pagination/pagination.dto';
 import { AuthService } from 'src/auth/auth.service';
+import { Memory, MemoryDocument } from 'src/memories/entities/memory.entity';
 
 @Injectable()
 export class UsersService {
@@ -13,6 +14,8 @@ export class UsersService {
     @InjectModel(User.name)
     private readonly userModel: Model<UserDocument>,
     private readonly auth: AuthService,
+    @InjectModel(Memory.name)
+    private readonly memoryModel: Model<MemoryDocument>,
   ) {}
   async search(query: SearchQuery) {
     const findQuery = query.keyword
@@ -38,6 +41,10 @@ export class UsersService {
   }
   async findOne(id: string) {
     const user = await this.userModel.findById(id);
+    const mentionedMemoriesCount = await this.memoryModel
+      .find({ mentioned: { $in: id } })
+      .countDocuments();
+    console.log({ mentionedMemoriesCount });
     const transformedUser = {
       id: user?._id.toString(),
       emailAddress: user.emailAddress,
@@ -46,7 +53,8 @@ export class UsersService {
       firstName: user?.profile.firstName,
       lastName: user?.profile.lastName ?? '',
       memoriesCount: user.memories.length,
-      joinedAt: user.metadata.createdAt
+      joinedAt: user.metadata.createdAt,
+      mentionedMemoriesCount,
     };
     return transformedUser;
   }
