@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Delete, Get, Headers, Param, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -25,6 +25,10 @@ export class UsersController {
   @Get(':id')
   findOne(@Param('id') id: string): Promise<UserDto> {
     return this.usersService.findOne(id);
+  }
+  @Delete()
+  delete(@Headers('userId') userId: string): Promise<any> {
+    return this.usersService.delete(userId);
   }
 
   // @Get('followers')

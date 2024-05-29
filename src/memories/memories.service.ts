@@ -19,9 +19,11 @@ export class MemoriesService {
     private readonly memoryModel: Model<MemoryDocument>,
     private readonly auth: AuthService,
   ) {}
-  create(createMemoryDto: CreateMemoryDto) {
-    console.log({ createMemoryDto });
-    const newMemory = this.memoryModel.create(createMemoryDto);
+  async create(createMemoryDto: CreateMemoryDto) {
+    const newMemory = await this.memoryModel.create(createMemoryDto);
+    const userWithNewMemory = await this.auth.getCurrentUserOrThrow();
+    userWithNewMemory.memories.push(newMemory.id);
+    await userWithNewMemory.save();
     return newMemory;
   }
 

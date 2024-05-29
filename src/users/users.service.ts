@@ -7,6 +7,7 @@ import { PageMetaDto } from 'src/pagination/pagination-meta.dto';
 import { PageDto } from 'src/pagination/pagination.dto';
 import { AuthService } from 'src/auth/auth.service';
 import { Memory, MemoryDocument } from 'src/memories/entities/memory.entity';
+import { clerkClient } from '@clerk/clerk-sdk-node';
 
 @Injectable()
 export class UsersService {
@@ -57,5 +58,10 @@ export class UsersService {
       mentionedMemoriesCount,
     };
     return transformedUser;
+  }
+  async delete(id: string) {
+    await this.userModel.deleteOne({ clerkUserId: id });
+    await clerkClient.users.deleteUser(id);
+    return 'User deleted';
   }
 }

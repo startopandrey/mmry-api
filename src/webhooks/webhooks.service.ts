@@ -111,11 +111,10 @@ export class WebhooksService {
       username,
       first_name,
       last_name,
-      image_url,
       email_addresses,
       created_at,
       updated_at,
-      public_metadata,
+      unsafe_metadata,
     } = userData;
     const generatedUser = {
       username,
@@ -127,11 +126,10 @@ export class WebhooksService {
       profile: {
         firstName: first_name,
         lastName: last_name,
-        birthday: public_metadata.birthday as string,
-        profileImage:
-          (image_url as string) ??
-          (public_metadata.profileImage as string) ??
-          '',
+        birthday: unsafe_metadata.birthday as string,
+        profileImage: (unsafe_metadata.profileImage as string) ?? '',
+        address: (unsafe_metadata.address as string) ?? '',
+        postcode: (unsafe_metadata.postcode as string) ?? '',
       },
     };
     const newUser = await this.userModel.findOneAndUpdate(
