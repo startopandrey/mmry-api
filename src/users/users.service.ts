@@ -30,10 +30,12 @@ export class UsersService {
       .sort({ date: query.order })
       .limit(query.take)
       .skip(query.skip);
+    console.log({ foundUsers });
     const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto: query });
     const usersDtos = foundUsers.map((u) => ({
       id: u._id.toString(),
       clerkUserId: u.clerkUserId,
+      profileImage: u.profile?.profileImage ?? '',
       username: u.username,
       firstName: u.profile.firstName,
       lastName: u.profile.lastName ?? '',
@@ -50,6 +52,7 @@ export class UsersService {
       id: user?._id.toString(),
       emailAddress: user.emailAddress,
       clerkUserId: user?.clerkUserId,
+      profileImage: user?.profile?.profileImage ?? '',
       username: user?.username,
       firstName: user?.profile.firstName,
       lastName: user?.profile.lastName ?? '',

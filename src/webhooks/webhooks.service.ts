@@ -127,7 +127,7 @@ export class WebhooksService {
         firstName: first_name,
         lastName: last_name,
         birthday: unsafe_metadata.birthday as string,
-        profileImage: (unsafe_metadata.profileImage as string) ?? '',
+        profileImage: (unsafe_metadata.profileImageUrl as string) ?? '',
         address: (unsafe_metadata.address as string) ?? '',
         postcode: (unsafe_metadata.postcode as string) ?? '',
       },
