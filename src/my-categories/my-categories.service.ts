@@ -1,14 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { CreateMyCategoryDto } from './dto/create-my-category.dto';
 import { UpdateMyCategoryDto } from './dto/update-my-category.dto';
-import { InjectModel, Prop } from '@nestjs/mongoose';
+import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from 'src/users/entities/user.entity';
 import { Model } from 'mongoose';
 import { AuthService } from 'src/auth/auth.service';
 import { Memory, MemoryDocument } from 'src/memories/entities/memory.entity';
 import { UserCategory } from './entities/my-category.entity';
-import { IsNotEmpty } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
 
 
 @Injectable()

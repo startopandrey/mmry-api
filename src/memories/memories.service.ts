@@ -79,7 +79,10 @@ export class MemoriesService {
 
     const entities = await this.memoryModel
       .find(findOptions)
-      .sort({ date: query.order })
+      .sort({ date: query.order }).populate({
+        path: 'mentioned',
+        model: 'User',
+      })
       .limit(query.take)
       .skip(query.skip);
 
@@ -87,7 +90,7 @@ export class MemoriesService {
       entities.map(async (memory) => ({
         ...memory.toObject(),
         id: memory._id,
-        categories: await this.populateMemoryCategories(memory.categories),
+        categories: await this.populateMemoryCategories(memory.categories)
       })),
     );
     const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto: query });

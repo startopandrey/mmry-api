@@ -46,7 +46,6 @@ class Follower {
 class Category {
   @Prop()
   category: string;
-  @Prop() color: string;
 }
 // base entity user class
 @Schema({
