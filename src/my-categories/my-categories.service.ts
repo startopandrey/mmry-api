@@ -8,7 +8,6 @@ import { AuthService } from 'src/auth/auth.service';
 import { Memory, MemoryDocument } from 'src/memories/entities/memory.entity';
 import { UserCategory } from './entities/my-category.entity';
 
-
 @Injectable()
 export class MyCategoriesService {
   constructor(

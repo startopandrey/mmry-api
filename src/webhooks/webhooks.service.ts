@@ -92,6 +92,7 @@ export class WebhooksService {
       categories: [],
       followers: [],
       memories: [],
+      wishes: [],
       manualFollowers: [],
     };
     console.log({ generatedUser });
