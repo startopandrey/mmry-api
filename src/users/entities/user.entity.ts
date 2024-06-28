@@ -7,6 +7,10 @@ class WithIds {
   _id: string;
   id: string;
 }
+class Wishes {
+  @Prop()
+  name: string;
+}
 class UserMetadata {
   @Prop()
   createdAt: number;
@@ -77,6 +81,9 @@ export class User {
 
   @Prop({ type: [Category] })
   categories: Category[];
+
+  @Prop({ type: [Wishes] })
+  wishes: Wishes[];
 
   @Prop({
     type: [

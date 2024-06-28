@@ -12,6 +12,7 @@ import { MyFollowersModule } from './my-followers/my-followers.module';
 import { WebhooksModule } from './webhooks/webhooks.module';
 import { CategoriesModule } from './categories/categories.controller';
 import { MyCategoriesModule } from './my-categories/my-categories.module';
+import { MyWishModule } from './my-wish/my-wish.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { MyCategoriesModule } from './my-categories/my-categories.module';
     MemoriesModule,
     WebhooksModule,
     MyCategoriesModule,
+    MyWishModule,
   ],
   controllers: [AppController],
   providers: [AppService],
