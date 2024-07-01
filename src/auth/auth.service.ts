@@ -21,10 +21,14 @@ export class AuthService implements AuthServiceBase {
       console.warn('No JWT');
       return '';
     }
-    const clerkUserId = headerValue.replace('Bearer ', '');
+    const clerkUserId = headerValue.replace('Bearer ', '').trim();
+
+    const all = await this.userModel.find()
+    console.log(all)
     const currentUser = await this.userModel.findOne({
       clerkUserId: clerkUserId,
     });
+
     const userId = currentUser._id.toString();
     return userId;
   }
