@@ -7,10 +7,7 @@ class WithIds {
   _id: string;
   id: string;
 }
-class Wishes {
-  @Prop()
-  name: string;
-}
+
 class UserMetadata {
   @Prop()
   createdAt: number;
@@ -50,6 +47,12 @@ class Follower {
 class Category {
   @Prop()
   category: string;
+}
+
+@Schema()
+class Wishes {
+  @Prop()
+  name: string;
 }
 // base entity user class
 @Schema({

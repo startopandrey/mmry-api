@@ -39,6 +39,6 @@ export class MyWishController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.myWishService.remove(+id);
+    return this.myWishService.remove(id);
   }
 }

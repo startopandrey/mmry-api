@@ -33,7 +33,13 @@ export class MyWishService {
     return `This action updates a #${id} myWish`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} myWish`;
+  async remove(id: string) {
+    const currentUser = await this.auth.getCurrentUserOrThrow();
+    // console.log(currentUser.wishes)
+    currentUser.wishes = currentUser.wishes.filter(
+      (item: any) => item._id != id,
+    );
+    await currentUser.save();
+    return "SUCCESS"
   }
 }
