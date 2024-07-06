@@ -46,8 +46,8 @@ export class MemoriesController {
   }
 
   @Get()
-  findAll(@Query() pageOptionsDto: PaginationQuery) {
-    return this.memoriesService.pagination(pageOptionsDto);
+  findAll() {
+    return this.memoriesService.findAll();
   }
 
   @Put(':id')
