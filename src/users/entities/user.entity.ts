@@ -7,7 +7,10 @@ class WithIds {
   _id: string;
   id: string;
 }
-
+class Wishes {
+  @Prop()
+  name: string;
+}
 class UserMetadata {
   @Prop()
   createdAt: number;
@@ -49,11 +52,7 @@ class Category {
   category: string;
 }
 
-@Schema()
-class Wishes {
-  @Prop()
-  name: string;
-}
+
 // base entity user class
 @Schema({
   toJSON: {

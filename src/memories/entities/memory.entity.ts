@@ -26,6 +26,15 @@ class LocationParams {
   },
 })
 export class Memory {
+  toObject(): any {
+    throw new Error('Method not implemented.');
+  }
+  @Prop()
+  _id: string;
+
+  @Prop()
+  id: string;
+
   @Prop({ required: true })
   name: string;
 

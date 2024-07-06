@@ -10,6 +10,7 @@ import { PageDto } from 'src/pagination/pagination.dto';
 import { PageMetaDto } from 'src/pagination/pagination-meta.dto';
 import { PaginationQuery } from 'src/pagination/pagination-options.dto';
 import { SearchQuery } from './dto/search.query';
+import { MemoriesDto } from './dto/memories.dto';
 
 @Injectable()
 export class MemoriesService {
@@ -27,9 +28,20 @@ export class MemoriesService {
     return newMemory;
   }
 
-  async findAll(): Promise<Memory[]> {
-    const result = await this.memoryModel.find();
-    return result;
+  async findAll(): Promise<MemoriesDto<any>> {
+    const currentUser = await this.auth.getCurrentUserOrThrow();
+    const entities = (await this.memoryModel
+      .find({ authorClerkId: currentUser.clerkUserId })
+      .sort({ date: 'asc' })) as Memory[];
+    const populatedMemories = await Promise.all(
+      entities.map(async (memory: Memory) => ({
+        ...memory?.toObject(),
+        id: memory._id,
+        categories: await this.populateMemoryCategories(memory.categories),
+      })),
+    );
+    const metadata = { itemCount: entities.length };
+    return new MemoriesDto(populatedMemories, metadata);
   }
   async search(query: SearchQuery): Promise<PageDto<any>> {
     console.log(query);
@@ -79,7 +91,8 @@ export class MemoriesService {
 
     const entities = await this.memoryModel
       .find(findOptions)
-      .sort({ date: query.order }).populate({
+      .sort({ date: query.order })
+      .populate({
         path: 'mentioned',
         model: 'User',
       })
@@ -90,7 +103,7 @@ export class MemoriesService {
       entities.map(async (memory) => ({
         ...memory.toObject(),
         id: memory._id,
-        categories: await this.populateMemoryCategories(memory.categories)
+        categories: await this.populateMemoryCategories(memory.categories),
       })),
     );
     const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto: query });
@@ -109,9 +122,9 @@ export class MemoriesService {
     return { itemsCount: countMemories };
   }
   async pagination(pageOptionsDto: PaginationQuery): Promise<PageDto<any>> {
-    console.log(pageOptionsDto.page);
+    const currentUser = await this.auth.getCurrentUserOrThrow();
     const entities = await this.memoryModel
-      .find()
+      .find({ authorClerkId: currentUser.clerkUserId })
       .sort({ date: pageOptionsDto.order })
       .limit(pageOptionsDto.take)
       .skip(pageOptionsDto.skip);
