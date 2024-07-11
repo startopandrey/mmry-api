@@ -3,14 +3,7 @@ import mongoose, { Mongoose, SchemaTypes, Types } from 'mongoose';
 
 export type UserDocument = User & mongoose.Document;
 
-class WithIds {
-  _id: string;
-  id: string;
-}
-class Wishes {
-  @Prop()
-  name: string;
-}
+
 class UserMetadata {
   @Prop()
   createdAt: number;
@@ -31,6 +24,7 @@ class UserProfile {
   profileImage: string;
 }
 
+@Schema()
 class ManualFollowers {
   @Prop()
   name: string;
@@ -46,13 +40,18 @@ class Follower {
   @Prop() userId: string;
   @Prop() since: number;
 }
+
 @Schema()
 class Category {
   @Prop()
   category: string;
 }
 
-
+@Schema()
+class Wishes {
+  @Prop()
+  name: string;
+}
 // base entity user class
 @Schema({
   toJSON: {
@@ -73,7 +72,7 @@ export class User {
   @Prop()
   metadata: UserMetadata;
 
-  @Prop()
+  @Prop([{ memoryId: { type: [SchemaTypes.ObjectId], ref: 'Memory' } }])
   memories: { memoryId: string }[];
 
   @Prop({

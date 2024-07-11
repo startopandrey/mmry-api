@@ -23,8 +23,6 @@ export class AuthService implements AuthServiceBase {
     }
     const clerkUserId = headerValue.replace('Bearer ', '').trim();
 
-    const all = await this.userModel.find()
-    console.log(all)
     const currentUser = await this.userModel.findOne({
       clerkUserId: clerkUserId,
     });

@@ -3,8 +3,9 @@ import { CreateMyWishDto } from './dto/create-my-wish.dto';
 import { UpdateMyWishDto } from './dto/update-my-wish.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from 'src/users/entities/user.entity';
-import { Model } from 'mongoose';
+import mongoose, { Model, Types } from 'mongoose';
 import { AuthService } from 'src/auth/auth.service';
+import { MyWish } from './entities/my-wish.entity';
 
 @Injectable()
 export class MyWishService {
@@ -20,7 +21,7 @@ export class MyWishService {
     return 'SUCCESS';
   }
 
-  async findAll() {
+  async findAll(): Promise<MyWish[]> {
     const currentUser = await this.auth.getCurrentUserOrThrow();
     return currentUser?.wishes ?? [];
   }
@@ -40,6 +41,6 @@ export class MyWishService {
       (item: any) => item._id != id,
     );
     await currentUser.save();
-    return "SUCCESS"
+    return 'SUCCESS';
   }
 }
