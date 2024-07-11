@@ -34,8 +34,8 @@ export class MemoriesService {
       .find({ authorClerkId: currentUser.clerkUserId })
       .sort({ date: 'asc' })) as Memory[];
     const populatedMemories = await Promise.all(
-      entities.map(async (memory: Memory) => ({
-        ...memory?.toObject(),
+      entities.map(async (memory: any) => ({
+        ...memory,
         id: memory._id,
         categories: await this.populateMemoryCategories(memory.categories),
       })),
@@ -101,7 +101,7 @@ export class MemoriesService {
 
     const populatedMemories = await Promise.all(
       entities.map(async (memory) => ({
-        ...memory.toObject(),
+        ...memory?.toObject(),
         id: memory._id,
         categories: await this.populateMemoryCategories(memory.categories),
       })),
@@ -135,24 +135,26 @@ export class MemoriesService {
 
   async findOne(id: string) {
     const currentUser = await this.auth.getCurrentUserOrThrow();
-    const memory = await this.memoryModel
-      .findById(id)
-      .populate({
-        path: 'mentioned',
-        model: 'User',
-      })
-      .exec();
-    const manualFollowerIds = memory.mentionedManually;
+    const memory = await this.memoryModel.findById(id).populate({
+      path: 'mentioned',
+      model: 'User',
+    });
+    console.log({memory})
+    if (!memory) {
+      return null;
+    }
+    const manualFollowerIds = memory?.mentionedManually ?? [];
+    const populatedManualFollowers = currentUser?.manualFollowers.length
+      ? currentUser?.manualFollowers?.filter((e: any) =>
+          manualFollowerIds?.includes(e?._id),
+        )
+      : [];
 
-    const populatedManualFollowers = currentUser.manualFollowers.filter(
-      (e: any) => manualFollowerIds.includes(e._id),
-    );
-    console.log({ populatedManualFollowers });
-    const populatedCategories = await this.populateMemoryCategories(
-      memory.categories,
-    );
+    const populatedCategories = memory?.categories.length
+      ? await this.populateMemoryCategories(memory?.categories)
+      : [];
     const transformedMemory = {
-      ...memory.toObject(),
+      ...memory?.toObject(),
       categories: populatedCategories,
       mentionedManually: populatedManualFollowers,
     };
