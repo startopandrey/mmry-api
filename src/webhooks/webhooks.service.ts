@@ -6,6 +6,7 @@ import { ConfigService } from '@nestjs/config';
 import { User, UserDocument } from 'src/users/entities/user.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { clerkClient } from '@clerk/clerk-sdk-node';
 
 export type DeletedObjectJSON = any;
 export type UserJSON = any;
@@ -70,7 +71,6 @@ export class WebhooksService {
       updated_at,
       public_metadata,
     } = userData;
-    console.log({ userData });
     const generatedUser: User = {
       clerkUserId: id,
       username: username ?? `user_${new Date().getTime()}`,
@@ -95,9 +95,16 @@ export class WebhooksService {
       wishes: [],
       manualFollowers: [],
     };
-    console.log({ generatedUser });
     const newUser = await new this.userModel(generatedUser);
-    return newUser.save();
+    await newUser.save();
+    const clerkUser = await clerkClient.users.getUser(id);
+    await clerkClient.users.updateUser(id, {
+      unsafeMetadata: {
+        ...clerkUser.unsafeMetadata,
+        id: newUser.id,
+      },
+    });
+    return newUser;
   }
   private async deleteUser(userData: DeletedObjectJSON) {
     const userId = userData.id;
