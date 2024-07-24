@@ -114,6 +114,7 @@ export class WebhooksService {
     return 'SUCCESS';
   }
   private async updateUser(userData: UserJSON) {
+    console.log('updated user')
     const {
       id,
       username,

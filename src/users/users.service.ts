@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { SearchQuery } from './dto/search.query';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -43,16 +43,33 @@ export class UsersService {
     return new PageDto(usersDtos, pageMetaDto);
   }
   async findOne(id: string) {
+    const currentUser = await this.auth.getCurrentUserOrThrow();
     const user = await this.userModel.findById(id);
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.FORBIDDEN);
+    }
     const mentionedMemoriesCount = await this.memoryModel
       .find({ mentioned: { $in: id } })
       .countDocuments();
-    console.log({ mentionedMemoriesCount });
+    const profileImage = !user?.profile?.profileImage.includes(
+      'https://img.clerk.com',
+    )
+      ? user?.profile?.profileImage
+      : '';
+
+    const isMyAccount = currentUser._id.toString() == user?._id.toString();
+    const isFollower =
+      isMyAccount ||
+      currentUser.followers.filter(
+        (follower) => follower.userId?.toString() == user?._id?.toString(),
+      ).length;
     const transformedUser = {
+      isMyAccount: isMyAccount,
+      isFollower: !!isFollower,
       id: user?._id.toString(),
       emailAddress: user.emailAddress,
       clerkUserId: user?.clerkUserId,
-      profileImage: user?.profile?.profileImage ?? '',
+      profileImage: profileImage,
       username: user?.username,
       firstName: user?.profile.firstName,
       lastName: user?.profile.lastName ?? '',

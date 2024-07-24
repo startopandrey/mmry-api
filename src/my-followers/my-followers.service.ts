@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import {
   CreateManualFollowerDto,
   CreateMyFollowerDto,
@@ -7,7 +12,7 @@ import {
 import { UpdateMyFollowerDto } from './dto/update-my-follower.dto';
 
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { User, UserDocument } from 'src/users/entities/user.entity';
 import { AuthServiceBase } from 'src/auth/auth.service';
 
@@ -19,15 +24,29 @@ export class MyFollowersService {
     private readonly auth: AuthServiceBase,
   ) {}
   async follow({ userId: followedUserId }: CreateMyFollowerDto) {
+    // Check if id is valid form
+    if (!Types.ObjectId.isValid(followedUserId)) {
+      throw new BadRequestException(`User ID is wrong`);
+    }
     const currentUser = await this.auth.getCurrentUserOrThrow();
-    if (currentUser._id === followedUserId) {
-      throw new BadRequestException('You cannot follow yourself');
+    const foundUser = await this.userModel.findById(followedUserId);
+    if (!foundUser) {
+      throw new HttpException('User not found', HttpStatus.FORBIDDEN);
+    }
+    if (currentUser._id.toString() === followedUserId) {
+      throw new HttpException(
+        'You cannot follow yourself',
+        HttpStatus.CONFLICT,
+      );
     }
     const checkIsFollowing = currentUser.followers.find(
       (e) => e.userId == followedUserId,
     );
     if (checkIsFollowing) {
-      return 'ALREADY';
+      throw new HttpException(
+        'You already follow this user',
+        HttpStatus.METHOD_NOT_ALLOWED,
+      );
     }
     const newFollower = { userId: followedUserId, since: Date.now() };
     currentUser.followers.push(newFollower);
