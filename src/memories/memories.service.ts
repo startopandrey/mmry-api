@@ -139,7 +139,7 @@ export class MemoriesService {
       path: 'mentioned',
       model: 'User',
     });
-    console.log({memory})
+
     if (!memory) {
       return null;
     }
@@ -173,10 +173,26 @@ export class MemoriesService {
     return currentCategories;
   }
   async update(id: string, updateMemoryDto: UpdateMemoryDto) {
+    console.log(updateMemoryDto?.location?.coordinates);
+    const transformedGeo = updateMemoryDto?.location?.coordinates
+      ? {
+          location: {
+            ...updateMemoryDto?.location,
+            geometry: {
+              coordinates: updateMemoryDto?.location?.coordinates,
+            },
+          },
+        }
+      : null;
+    const transformedMemory = {
+      ...updateMemoryDto,
+      ...transformedGeo,
+    };
     const updatedMemory = await this.memoryModel.findByIdAndUpdate(
       id,
-      updateMemoryDto,
+      transformedMemory,
     );
+    console.log({ updatedMemory });
     return updatedMemory;
   }
 
