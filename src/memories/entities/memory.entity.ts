@@ -4,6 +4,7 @@ import { ASSETS_TYPE } from '../dto/create-memory.dto';
 
 export type MemoryDocument = Memory & Document;
 
+@Schema()
 export class MemoryAssetsParams {
   @Prop({ type: String, enum: ASSETS_TYPE })
   type: ASSETS_TYPE;
@@ -14,9 +15,24 @@ export class MemoryAssetsParams {
   @Prop()
   thumbnailUri: string;
 }
+
+export class Coordinates {
+  @Prop()
+  lat: number;
+  @Prop()
+  lng: number;
+}
+
+export class Geometry {
+  coordinates: Coordinates;
+}
+
+@Schema()
 class LocationParams {
   @Prop()
   address: string;
+  @Prop()
+  geometry: Geometry;
 }
 
 @Schema({
@@ -26,15 +42,6 @@ class LocationParams {
   },
 })
 export class Memory {
-  // toObject(): any {
-  //   throw new Error('Method not implemented.');
-  // }
-  // @Prop()
-  // _id: string;
-
-  // @Prop()
-  // id: string;
-
   @Prop({ required: true })
   name: string;
 
@@ -49,7 +56,7 @@ export class Memory {
   @Prop()
   date: string;
 
-  @Prop()
+  @Prop({ type: LocationParams })
   location: LocationParams;
 
   @Prop()

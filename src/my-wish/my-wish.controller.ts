@@ -11,6 +11,7 @@ import { MyWishService } from './my-wish.service';
 import { CreateMyWishDto } from './dto/create-my-wish.dto';
 import { UpdateMyWishDto } from './dto/update-my-wish.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+
 @ApiTags('My Wish')
 @ApiBearerAuth('JWT')
 @Controller('api/v1/my-wishes')

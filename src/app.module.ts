@@ -13,6 +13,7 @@ import { WebhooksModule } from './webhooks/webhooks.module';
 import { CategoriesModule } from './categories/categories.controller';
 import { MyCategoriesModule } from './my-categories/my-categories.module';
 import { MyWishModule } from './my-wish/my-wish.module';
+import { MapModule } from './map/map.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { MyWishModule } from './my-wish/my-wish.module';
     WebhooksModule,
     MyCategoriesModule,
     MyWishModule,
+    MapModule,
   ],
   controllers: [AppController],
   providers: [AppService],

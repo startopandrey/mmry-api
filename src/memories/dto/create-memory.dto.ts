@@ -25,6 +25,11 @@ export class AssetsParam {
 class LocationParam {
   @ApiProperty()
   address: string;
+  @ApiProperty()
+  coordinates: {
+    lat: number;
+    lng: number;
+  };
 }
 class MentionedManually {
   @IsNotEmpty()
@@ -46,7 +51,6 @@ export class CreateMemoryDto {
   readonly assets: AssetsParam[];
 
   @IsNumber()
-  @IsNotEmpty()
   @ApiProperty()
   date: number;
 
@@ -56,6 +60,11 @@ export class CreateMemoryDto {
   @ApiProperty()
   @IsNotEmpty()
   authorClerkId: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  authorId: string;
+
   @ApiProperty()
   mentioned: string[];
 
