@@ -16,7 +16,6 @@ export class MemoryAssetsParams {
   thumbnailUri: string;
 }
 
-@Schema()
 export class Coordinates {
   @Prop()
   lat: number;
@@ -24,7 +23,6 @@ export class Coordinates {
   lng: number;
 }
 
-@Schema()
 export class Geometry {
   coordinates: Coordinates;
 }
