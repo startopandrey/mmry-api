@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document, SchemaTypes } from 'mongoose';
 import { ASSETS_TYPE } from 'src/memories/dto/create-memory.dto';
 
-export type ActivityDocument = Activity & Document;
+export type ActivityDocument = AdminActivity & Document;
 
 @Schema({
   toJSON: {
@@ -50,7 +50,7 @@ class LocationParams {
     virtuals: true,
   },
 })
-export class Activity {
+export class AdminActivity {
   @Prop({ required: true })
   title: string;
 
@@ -69,8 +69,8 @@ export class Activity {
   @Prop()
   isActive: boolean;
 
-  @Prop({ type: [SchemaTypes.ObjectId], ref: 'Category' })
+  @Prop({ type: [SchemaTypes.ObjectId], ref: 'AdminCategory' })
   categories: string[];
 }
 
-export const ActivitySchema = SchemaFactory.createForClass(Activity);
+export const AdminActivitySchema = SchemaFactory.createForClass(AdminActivity);

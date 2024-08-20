@@ -1,19 +1,27 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document, SchemaTypes } from 'mongoose';
-import { ASSETS_TYPE } from '../dto/create-memory.dto';
+import { ASSETS_TYPE } from 'src/memories/dto/create-memory.dto';
 
-export type MemoryDocument = Memory & Document;
+export type AdminContestDocument = AdminContest & Document;
 
-@Schema()
-export class MemoryAssetsParams {
+@Schema({
+  toJSON: {
+    getters: true,
+    virtuals: true,
+  },
+})
+export class AssetsParams {
+  @Prop({ type: mongoose.Schema.Types.ObjectId, auto: true })
+  _id: mongoose.Schema.Types.ObjectId;
+
   @Prop({ type: String, enum: ASSETS_TYPE })
   type: ASSETS_TYPE;
+
   @Prop()
   fileName: string;
+
   @Prop()
   uri: string;
-  @Prop()
-  thumbnailUri: string;
 }
 
 export class Coordinates {
@@ -36,43 +44,44 @@ class LocationParams {
   geometry: Geometry;
 }
 
+@Schema()
+class Duration {
+  @Prop()
+  from: number;
+  @Prop()
+  to: number;
+}
+
 @Schema({
   toJSON: {
     getters: true,
     virtuals: true,
   },
 })
-export class Memory {
+export class AdminContest {
   @Prop({ required: true })
-  name: string;
+  title: string;
 
   @Prop()
-  assets: {
-    type: ASSETS_TYPE;
-    fileName: string;
-    uri: string;
-    thumbnailUri: string;
-  }[];
+  note: string;
 
   @Prop()
-  date: string;
+  assets: AssetsParams[];
 
   @Prop({ type: LocationParams })
   location: LocationParams;
 
   @Prop()
-  authorClerkId: string;
+  date: number;
 
-  @Prop({ type: [SchemaTypes.ObjectId], ref: 'User' })
-  mentioned: string[];
-
-  @Prop()
-  mentionedManually: string[];
+  @Prop({ type: Duration })
+  duration: Duration;
 
   @Prop()
-  note: string;
-  @Prop({ type: [SchemaTypes.ObjectId] })
+  isActive: boolean;
+
+  @Prop({ type: [SchemaTypes.ObjectId], ref: 'AdminCategory' })
   categories: string[];
 }
 
-export const MemorySchema = SchemaFactory.createForClass(Memory);
+export const AdminContestSchema = SchemaFactory.createForClass(AdminContest);

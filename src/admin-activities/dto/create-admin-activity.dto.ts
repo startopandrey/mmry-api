@@ -25,7 +25,7 @@ class LocationParams {
   coordinates: Coordinates;
 }
 
-export class CreateActivityDto {
+export class CreateAdminActivityDto {
   @IsNotEmpty()
   @ApiProperty({ required: true })
   title: string;

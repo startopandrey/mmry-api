@@ -18,6 +18,17 @@ export class MapService {
     );
     return response.data;
   }
+  async coordsToAddress(lat: string, lng: string): Promise<any> {
+    const addressFromCoords = await axios.get(
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?types=address`,
+      {
+        params: {
+          access_token: process.env.MAPBOX_ACCESS_TOKEN,
+        },
+      },
+    );
+    return addressFromCoords.data;
+  }
 
   // Additional methods to interact with Mapbox API can be added here
 }

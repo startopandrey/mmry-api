@@ -7,70 +7,65 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { MyFollowersService } from './my-followers.service';
+import { UserFollowersService } from './user-followers.service';
 import {
   CreateManualFollowerDto,
-  CreateMyFollowerDto,
+  CreateUserFollowerDto,
   RemoveManualFollowerDto,
   UnFollowDto,
-} from './dto/create-my-follower.dto';
-import { UpdateMyFollowerDto } from './dto/update-my-follower.dto';
+} from './dto/create-user-follower.dto';
+import { UpdateUserFollowerDto } from './dto/update-user-follower.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from 'src/users/entities/user.entity';
 
-@ApiTags('My Followers')
+@ApiTags('User Followers')
 @ApiBearerAuth('JWT')
 @Controller('api/v1/my-followers')
-export class MyFollowersController {
+export class UserFollowersController {
   constructor(
     @InjectModel(User.name)
     private readonly userModel: Model<UserDocument>,
-    private readonly myFollowersService: MyFollowersService,
+    private readonly userFollowersService: UserFollowersService,
   ) {}
 
   @Post('follow')
-  follow(@Body() dto: CreateMyFollowerDto) {
-    return this.myFollowersService.follow(dto);
+  follow(@Body() dto: CreateUserFollowerDto) {
+    return this.userFollowersService.follow(dto);
   }
   @Post('unfollow')
   unFollow(@Body() dto: UnFollowDto) {
-    return this.myFollowersService.unFollow(dto);
+    return this.userFollowersService.unFollow(dto);
   }
 
   @Post('follow/manual-follower')
   followManualFollower(@Body() dto: CreateManualFollowerDto) {
-    return this.myFollowersService.createManualFollower(dto);
+    return this.userFollowersService.createManualFollower(dto);
   }
   @Post('unfollow/manual-follower')
   removeManualFollower(@Body() dto: RemoveManualFollowerDto) {
-    return this.myFollowersService.removeManualFollower(dto);
+    return this.userFollowersService.removeManualFollower(dto);
   }
   @Get('manual-followers')
   getManualFollowers() {
-    return this.myFollowersService.getManualFollowers();
+    return this.userFollowersService.getManualFollowers();
   }
   @Get()
   findAll() {
-    return this.myFollowersService.findAll();
+    return this.userFollowersService.findAll();
   }
-
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.myFollowersService.findOne(+id);
-  // }
 
   @Patch(':id')
   update(
     @Param('id') id: string,
-    @Body() updateMyFollowerDto: UpdateMyFollowerDto,
+    @Body() updateUserFollowerDto: UpdateUserFollowerDto,
   ) {
-    return this.myFollowersService.update(+id, updateMyFollowerDto);
+    return this.userFollowersService.update(+id, updateUserFollowerDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.myFollowersService.remove(+id);
+    return this.userFollowersService.remove(+id);
   }
 }

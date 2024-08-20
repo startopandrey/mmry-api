@@ -9,15 +9,36 @@ export class AssetsParams {
   fileName: string;
   @ApiProperty()
   uri: string;
+}
+export class Coordinates {
   @ApiProperty()
-  thumbnailUri: string;
+  lat: number;
+  @ApiProperty()
+  lng: number;
 }
 
-export class CreateCategoryDto {
+class LocationParams {
+  @ApiProperty()
+  address: string;
+
+  @ApiProperty()
+  coordinates: Coordinates;
+}
+
+class Duration {
+  @ApiProperty()
+  from: number;
+
+  @ApiProperty()
+  to: number;
+}
+
+export class CreateAdminContestDto {
   @IsNotEmpty()
   @ApiProperty({ required: true })
   title: string;
 
+  @IsNotEmpty()
   @ApiProperty({ type: AssetsParams, isArray: true })
   readonly assets: AssetsParams[];
 
@@ -27,9 +48,21 @@ export class CreateCategoryDto {
 
   @IsNotEmpty()
   @ApiProperty()
-  isPopular: boolean;
+  date: number;
 
   @IsNotEmpty()
   @ApiProperty()
-  color: string;
+  note: string;
+
+  @IsNotEmpty()
+  @ApiProperty()
+  location: LocationParams;
+
+  @IsNotEmpty()
+  @ApiProperty()
+  duration: Duration;
+
+  @IsNotEmpty()
+  @ApiProperty({ type: String, isArray: true })
+  categories: string[];
 }

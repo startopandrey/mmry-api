@@ -2,8 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export enum ASSETS_TYPE {
-  IMAGE = 'IMAGE',
-  VIDEO = 'VIDEO',
+  IMAGE = 'image',
+  VIDEO = 'video',
 }
 
 export class AssetsParam {
@@ -31,6 +31,7 @@ class LocationParam {
     lng: number;
   };
 }
+
 class MentionedManually {
   @IsNotEmpty()
   @ApiProperty()

@@ -1,8 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { Document, SchemaTypes, Types } from 'mongoose';
+import mongoose, { Document, Types } from 'mongoose';
 import { ASSETS_TYPE } from 'src/memories/dto/create-memory.dto';
 
-export type CategoryDocument = Category & Document;
+export type AdminCategoryDocument = AdminCategory & Document;
 
 @Schema({
   toJSON: {
@@ -30,18 +30,24 @@ export class AssetsParams {
     virtuals: true,
   },
 })
-export class Category {
+export class AdminCategory {
   @Prop({ required: true })
   title: string;
 
   @Prop({ type: [AssetsParams], default: [] })
   assets: AssetsParams[];
 
-  @Prop({ type: [{ type: Types.ObjectId, ref: 'Activity' }] })
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'AdminActivity' }] })
   activities: Types.ObjectId[];
+
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'AdminContest' }] })
+  contests: Types.ObjectId[];
 
   @Prop()
   isActive: boolean;
+
+  @Prop()
+  isSeparate: boolean;
 
   @Prop()
   isPopular: boolean;
@@ -49,4 +55,4 @@ export class Category {
   color: string;
 }
 
-export const CategorySchema = SchemaFactory.createForClass(Category);
+export const AdminCategorySchema = SchemaFactory.createForClass(AdminCategory);
