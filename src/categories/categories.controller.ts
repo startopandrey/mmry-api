@@ -1,36 +1,48 @@
-import { Body, Controller, Get, Module, Post } from '@nestjs/common';
-import { InjectModel, MongooseModule } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { Category, CategoryDocument } from './entities/categories.entity';
-import { IsNotEmpty } from 'class-validator';
-import { ApiProperty, ApiTags } from '@nestjs/swagger';
-import forFeatureDb from 'src/db/for-feature.db';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
+import { CategoriesService } from './categories.service';
+import { CreateCategoryDto } from './dto/create-category.dto';
+import { UpdateCategoryDto } from './dto/update-category.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
-class CreateCategoryDto {
-  @IsNotEmpty()
-  @ApiProperty()
-  category: string;
-}
-@ApiTags('Categories')
+@ApiTags('Admin Categories')
+@ApiBearerAuth('JWT')
 @Controller('api/v1/categories')
 export class CategoriesController {
-  constructor(
-    @InjectModel(Category.name)
-    private readonly categoryModel: Model<CategoryDocument>,
-  ) {}
+  constructor(private readonly categoriesService: CategoriesService) {}
+
   @Post()
-  create(@Body() dto: CreateCategoryDto) {
-    return dto;
+  create(@Body() createCategoryDto: CreateCategoryDto) {
+    return this.categoriesService.create(createCategoryDto);
   }
+
   @Get()
-  async findAll(): Promise<CreateCategoryDto[]> {
-    const allCategories = await this.categoryModel.find();
-    return allCategories;
+  findAll() {
+    return this.categoriesService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.categoriesService.findOne(id);
+  }
+
+  @Patch(':id')
+  update(
+    @Param('id') id: string,
+    @Body() updateCategoryDto: UpdateCategoryDto,
+  ) {
+    return this.categoriesService.update(+id, updateCategoryDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.categoriesService.remove(+id);
   }
 }
-
-@Module({
-  imports: [MongooseModule.forFeature(forFeatureDb)],
-  controllers: [CategoriesController],
-})
-export class CategoriesModule {}

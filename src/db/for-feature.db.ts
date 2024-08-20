@@ -1,4 +1,8 @@
-import { Category, CategorySchema } from 'src/categories/entities/categories.entity';
+import { Activity, ActivitySchema } from 'src/activities/entities/activity.entity';
+import {
+  Category,
+  CategorySchema,
+} from 'src/categories/entities/category.entity';
 import {
   MemoryCard,
   MemoryCardSchema,
@@ -22,5 +26,9 @@ export default [
   {
     name: Category.name,
     schema: CategorySchema,
+  },
+  {
+    name: Activity.name,
+    schema: ActivitySchema,
   },
 ];
