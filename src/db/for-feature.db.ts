@@ -1,4 +1,15 @@
-import { Category, CategorySchema } from 'src/categories/entities/categories.entity';
+import {
+  AdminActivity,
+  AdminActivitySchema,
+} from 'src/admin-activities/entities/admin-activity.entity';
+import {
+  AdminCategory,
+  AdminCategorySchema,
+} from 'src/admin-categories/entities/admin-category.entity';
+import {
+  AdminContest,
+  AdminContestSchema,
+} from 'src/admin-contests/entities/admin-contest.entity';
 import {
   MemoryCard,
   MemoryCardSchema,
@@ -20,7 +31,15 @@ export default [
     schema: UserSchema,
   },
   {
-    name: Category.name,
-    schema: CategorySchema,
+    name: AdminCategory.name,
+    schema: AdminCategorySchema,
+  },
+  {
+    name: AdminActivity.name,
+    schema: AdminActivitySchema,
+  },
+  {
+    name: AdminContest.name,
+    schema: AdminContestSchema,
   },
 ];

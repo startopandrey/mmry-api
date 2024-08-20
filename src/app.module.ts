@@ -8,12 +8,14 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { MemoriesCardModule } from './memories-card/memories-card.module';
 // import { MemoryCardSchema } from './memories-card/entities/memory-card.entity';
 import { UsersModule } from './users/users.module';
-import { MyFollowersModule } from './my-followers/my-followers.module';
+import { UserFollowersModule } from './user-followers/user-followers.module';
 import { WebhooksModule } from './webhooks/webhooks.module';
-import { CategoriesModule } from './categories/categories.controller';
 import { MyCategoriesModule } from './my-categories/my-categories.module';
 import { MyWishModule } from './my-wish/my-wish.module';
 import { MapModule } from './map/map.module';
+import { AdminCategoriesModule } from './admin-categories/admin-categories.module';
+import { AdminActivitiesModule } from './admin-activities/admin-activities.module';
+import { AdminContestsModule } from './admin-contests/admin-contests.module';
 
 @Module({
   imports: [
@@ -21,8 +23,8 @@ import { MapModule } from './map/map.module';
       isGlobal: true,
     }),
     MongooseModule.forRoot(process.env.DATABASE_URI),
-    MyFollowersModule,
-    CategoriesModule,
+    UserFollowersModule,
+    AdminCategoriesModule,
     MemoriesCardModule,
     UsersModule,
     MemoriesModule,
@@ -30,6 +32,8 @@ import { MapModule } from './map/map.module';
     MyCategoriesModule,
     MyWishModule,
     MapModule,
+    AdminActivitiesModule,
+    AdminContestsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

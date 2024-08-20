@@ -13,4 +13,12 @@ export class MapController {
   async geocode(@Query('address') address: string): Promise<any> {
     return this.mapService.geocode(address);
   }
+
+  @Get('coords-to-address')
+  async coordsToAddress(
+    @Query('lat') lat: string,
+    @Query('lng') lng: string,
+  ): Promise<any> {
+    return this.mapService.coordsToAddress(lat, lng);
+  }
 }

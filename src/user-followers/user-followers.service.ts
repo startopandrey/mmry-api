@@ -6,10 +6,10 @@ import {
 } from '@nestjs/common';
 import {
   CreateManualFollowerDto,
-  CreateMyFollowerDto,
+  CreateUserFollowerDto,
   UnFollowDto,
-} from './dto/create-my-follower.dto';
-import { UpdateMyFollowerDto } from './dto/update-my-follower.dto';
+} from './dto/create-user-follower.dto';
+import { UpdateUserFollowerDto } from './dto/update-user-follower.dto';
 
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
@@ -17,13 +17,13 @@ import { User, UserDocument } from 'src/users/entities/user.entity';
 import { AuthServiceBase } from 'src/auth/auth.service';
 
 @Injectable()
-export class MyFollowersService {
+export class UserFollowersService {
   constructor(
     @InjectModel(User.name)
     private readonly userModel: Model<UserDocument>,
     private readonly auth: AuthServiceBase,
   ) {}
-  async follow({ userId: followedUserId }: CreateMyFollowerDto) {
+  async follow({ userId: followedUserId }: CreateUserFollowerDto) {
     // Check if id is valid form
     if (!Types.ObjectId.isValid(followedUserId)) {
       throw new BadRequestException(`User ID is wrong`);
@@ -93,14 +93,14 @@ export class MyFollowersService {
     return followedUsers;
   }
   async findOne(id: string) {
-    return `This action returns a #${id} myFollower`;
+    return `This action returns a #${id} userFollower`;
   }
 
-  update(id: number, updateMyFollowerDto: UpdateMyFollowerDto) {
-    return `This action updates a #${id} myFollower`;
+  update(id: number, updateUserFollowerDto: UpdateUserFollowerDto) {
+    return `This action updates a #${id} userFollower`;
   }
 
   remove(id: number) {
-    return `This action removes a #${id} myFollower`;
+    return `This action removes a #${id} userFollower`;
   }
 }
