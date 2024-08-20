@@ -10,10 +10,11 @@ import { MemoriesCardModule } from './memories-card/memories-card.module';
 import { UsersModule } from './users/users.module';
 import { MyFollowersModule } from './my-followers/my-followers.module';
 import { WebhooksModule } from './webhooks/webhooks.module';
-import { CategoriesModule } from './categories/categories.controller';
 import { MyCategoriesModule } from './my-categories/my-categories.module';
 import { MyWishModule } from './my-wish/my-wish.module';
 import { MapModule } from './map/map.module';
+import { CategoriesModule } from './categories/categories.module';
+import { ActivitiesModule } from './activities/activities.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { MapModule } from './map/map.module';
     MyCategoriesModule,
     MyWishModule,
     MapModule,
+    ActivitiesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
