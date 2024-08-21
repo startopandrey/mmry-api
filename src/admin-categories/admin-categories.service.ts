@@ -7,6 +7,7 @@ import {
   AdminCategoryDocument,
 } from './entities/admin-category.entity';
 import { Model } from 'mongoose';
+import { FilterQuery } from './dto/filter.query';
 
 @Injectable()
 export class AdminCategoriesService {
@@ -35,6 +36,22 @@ export class AdminCategoriesService {
     });
 
     return foundCategory;
+  }
+
+  async filter({ isActive, isSeparate, isPopular }: FilterQuery) {
+    const filterOptions = {
+      isActive: !!isActive,
+      isSeparate: !!isSeparate,
+      isPopular: !!isPopular,
+    };
+    const allCategories = await this.adminCategoryModel
+      .find(filterOptions)
+      .populate({
+        path: 'activities',
+        model: 'AdminActivity',
+      });
+
+    return allCategories;
   }
 
   update(id: number, updateCategoryDto: UpdateAdminCategoryDto) {

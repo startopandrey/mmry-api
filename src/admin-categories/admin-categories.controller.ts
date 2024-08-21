@@ -6,11 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { AdminCategoriesService } from './admin-categories.service';
 import { CreateAdminCategoryDto } from './dto/create-admin-category.dto';
 import { UpdateAdminCategoryDto } from './dto/update-admin-category.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { FilterQuery } from './dto/filter.query';
 
 @ApiTags('Admin Categories')
 @ApiBearerAuth('JWT')
@@ -26,6 +28,11 @@ export class AdminCategoriesController {
   @Get()
   findAll() {
     return this.categoriesService.findAll();
+  }
+
+  @Get('filter')
+  filter(@Query() query: FilterQuery) {
+    return this.categoriesService.filter(query);
   }
 
   @Get(':id')
