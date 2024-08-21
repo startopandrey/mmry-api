@@ -10,9 +10,9 @@ async function bootstrap() {
     .setTitle('MMRY API')
     .setDescription('API for developers')
     .setVersion('1.0')
-    .addServer('http://localhost:4000/', 'Local environment')
-    .addServer('https://staging.yourapi.com/', 'Staging')
-    .addServer('https://production.yourapi.com/', 'Production')
+    // .addServer('http://localhost:4000/', 'Local environment')
+    // .addServer('https://staging.yourapi.com/', 'Staging')
+    // .addServer('https://production.yourapi.com/', 'Production')
     .addTag('MMRY')
     .addBearerAuth(
       { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
