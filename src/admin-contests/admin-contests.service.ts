@@ -55,6 +55,7 @@ export class AdminContestsService {
 
   async findOne(id: string) {
     const foundAdminContest = await this.contestModel.findById(id);
+    console.log({foundAdminContest})
     return foundAdminContest;
   }
 

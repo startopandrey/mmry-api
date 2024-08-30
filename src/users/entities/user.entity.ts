@@ -1,8 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { Mongoose, SchemaTypes, Types } from 'mongoose';
+import mongoose, {  SchemaTypes, Types } from 'mongoose';
 
 export type UserDocument = User & mongoose.Document;
-
 
 class UserMetadata {
   @Prop()
@@ -48,10 +47,11 @@ class Category {
 }
 
 @Schema()
-class Wishes {
-  @Prop()
-  name: string;
+class Wish {
+  @Prop({ type: Types.ObjectId })
+  wish: Types.ObjectId;
 }
+
 // base entity user class
 @Schema({
   toJSON: {
@@ -83,8 +83,8 @@ export class User {
   @Prop({ type: [Category] })
   categories: Category[];
 
-  @Prop({ type: [Wishes] })
-  wishes: Wishes[];
+  @Prop({ type: [{ wish: { type: SchemaTypes.ObjectId, ref: 'UserWish' } }] })
+  wishes: Wish[];
 
   @Prop({
     type: [
