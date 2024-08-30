@@ -15,6 +15,10 @@ import {
   MemoryCardSchema,
 } from 'src/memories-card/entities/memory-card.entity';
 import { Memory, MemorySchema } from 'src/memories/entities/memory.entity';
+import {
+  UserWish,
+  UserWishSchema,
+} from 'src/user-wishes/entities/user-wish.entity';
 import { User, UserSchema } from 'src/users/entities/user.entity';
 
 export default [
@@ -29,6 +33,10 @@ export default [
   {
     name: User.name,
     schema: UserSchema,
+  },
+  {
+    name: UserWish.name,
+    schema: UserWishSchema,
   },
   {
     name: AdminCategory.name,

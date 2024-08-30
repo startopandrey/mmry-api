@@ -30,16 +30,19 @@ export class MemoriesService {
 
   async findAll(): Promise<MemoriesDto<any>> {
     const currentUser = await this.auth.getCurrentUserOrThrow();
-    const entities = (await this.memoryModel
+    const entities = await this.memoryModel
       .find({ authorClerkId: currentUser.clerkUserId })
-      .sort({ date: 'asc' })) as Memory[];
-    const populatedMemories = await Promise.all(
-      entities.map(async (memory: any) => ({
-        ...memory,
-        id: memory._id,
-        categories: await this.populateMemoryCategories(memory.categories),
-      })),
-    );
+      .sort({ date: 'asc' })
+      .lean();
+
+    const populatedMemories = await entities.map((memory: any) => ({
+      ...memory,
+      id: memory._id,
+      categories: this.populateMemoryCategories(
+        memory.categories,
+        currentUser.categories,
+      ),
+    }));
     const metadata = { itemCount: entities.length };
     return new MemoriesDto(populatedMemories, metadata);
   }
@@ -103,7 +106,10 @@ export class MemoriesService {
       entities.map(async (memory) => ({
         ...memory?.toObject(),
         id: memory._id,
-        categories: await this.populateMemoryCategories(memory.categories),
+        categories: await this.populateMemoryCategories(
+          memory.categories,
+          currentUser.categories,
+        ),
       })),
     );
     const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto: query });
@@ -151,7 +157,10 @@ export class MemoriesService {
       : [];
 
     const populatedCategories = memory?.categories.length
-      ? await this.populateMemoryCategories(memory?.categories)
+      ? await this.populateMemoryCategories(
+          memory?.categories,
+          currentUser.categories,
+        )
       : [];
     const transformedMemory = {
       ...memory?.toObject(),
@@ -160,17 +169,19 @@ export class MemoriesService {
     };
     return transformedMemory;
   }
-  async populateMemoryCategories(memoryCategories) {
-    const currentUserCategories = await this.getCurrentUserCategories();
-    const populatedCategories = currentUserCategories.filter((category: any) =>
-      memoryCategories.includes(category._id),
+  populateMemoryCategories(memoryCategories, currentUserCategories) {
+    const currentUserCategoriesIds = currentUserCategories.map((category) =>
+      category._id.toString(),
     );
+    console.log({ memoryCategories, currentUserCategoriesIds });
+    const populatedCategories = memoryCategories
+      ?.map((categoryId: any) => {
+        return currentUserCategories?.filter(
+          (category) => category?._id.toString() == categoryId.toString(),
+        );
+      })
+      .filter(Boolean);
     return populatedCategories;
-  }
-  async getCurrentUserCategories() {
-    const currentUser = this.auth.getCurrentUserOrThrow();
-    const currentCategories = (await currentUser).categories;
-    return currentCategories;
   }
   async update(id: string, updateMemoryDto: UpdateMemoryDto) {
     console.log(updateMemoryDto?.location?.coordinates);
