@@ -25,20 +25,21 @@ export class AssetsParams {
 }
 
 export class Coordinates {
-  @Prop()
+  @Prop({ default: 0 })
   lat: mongoose.Schema.Types.Number;
-  @Prop()
+  @Prop({ default: 0 })
   lng: mongoose.Schema.Types.Number;
 }
 
 export class Geometry {
+  @Prop({ type: Coordinates })
   coordinates: Coordinates;
 }
 
 class LocationParams {
   @Prop()
   address: string;
-  @Prop()
+  @Prop({ type: Geometry })
   geometry: Geometry;
 }
 
