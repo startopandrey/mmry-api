@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { Document, SchemaTypes } from 'mongoose';
+import mongoose, { Document, Number, SchemaTypes } from 'mongoose';
 import { ASSETS_TYPE } from 'src/memories/dto/create-memory.dto';
 
 export type ActivityDocument = AdminActivity & Document;
@@ -26,12 +26,11 @@ export class AssetsParams {
 
 export class Coordinates {
   @Prop()
-  lat: number;
+  lat: mongoose.Schema.Types.Number;
   @Prop()
-  lng: number;
+  lng: mongoose.Schema.Types.Number;
 }
 
-@Schema()
 export class Geometry {
   coordinates: Coordinates;
 }
@@ -64,7 +63,7 @@ export class AdminActivity {
   location: LocationParams;
 
   @Prop()
-  date: number;
+  date: Date;
 
   @Prop()
   isActive: boolean;

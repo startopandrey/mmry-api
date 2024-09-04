@@ -26,17 +26,15 @@ export class AssetsParams {
 
 export class Coordinates {
   @Prop()
-  lat: number;
+  lat: mongoose.Schema.Types.Number;
   @Prop()
-  lng: number;
+  lng: mongoose.Schema.Types.Number;
 }
 
-@Schema()
 export class Geometry {
   coordinates: Coordinates;
 }
 
-@Schema()
 class LocationParams {
   @Prop()
   address: string;
@@ -47,9 +45,9 @@ class LocationParams {
 @Schema()
 class Duration {
   @Prop()
-  from: number;
+  from: Date;
   @Prop()
-  to: number;
+  to: Date;
 }
 
 @Schema({
@@ -72,7 +70,7 @@ export class AdminContest {
   location: LocationParams;
 
   @Prop()
-  date: number;
+  date: Date;
 
   @Prop({ type: Duration })
   duration: Duration;
@@ -82,6 +80,9 @@ export class AdminContest {
 
   @Prop({ type: [SchemaTypes.ObjectId], ref: 'AdminCategory' })
   categories: string[];
+
+  @Prop({ type: [SchemaTypes.ObjectId], ref: 'User' })
+  contestants: string[];
 }
 
 export const AdminContestSchema = SchemaFactory.createForClass(AdminContest);

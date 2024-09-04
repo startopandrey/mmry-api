@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { CreateAdminContestDto } from './dto/create-admin-contest.dto';
@@ -55,7 +55,12 @@ export class AdminContestsService {
 
   async findOne(id: string) {
     const foundAdminContest = await this.contestModel.findById(id);
-    console.log({foundAdminContest})
+    if (!foundAdminContest?._id) {
+      throw new HttpException(
+        'Contest was not found',
+        HttpStatus.METHOD_NOT_ALLOWED,
+      );
+    }
     return foundAdminContest;
   }
 

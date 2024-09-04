@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
+import { IsDateString, IsNotEmpty } from 'class-validator';
 import { ASSETS_TYPE } from 'src/memories/dto/create-memory.dto';
 
 export class AssetsParams {
@@ -27,10 +27,12 @@ class LocationParams {
 
 class Duration {
   @ApiProperty()
-  from: number;
+  @IsDateString()
+  from: string;
 
   @ApiProperty()
-  to: number;
+  @IsDateString()
+  to: string;
 }
 
 export class CreateAdminContestDto {
@@ -48,7 +50,8 @@ export class CreateAdminContestDto {
 
   @IsNotEmpty()
   @ApiProperty()
-  date: number;
+  @IsDateString()
+  date: string;
 
   @IsNotEmpty()
   @ApiProperty()
