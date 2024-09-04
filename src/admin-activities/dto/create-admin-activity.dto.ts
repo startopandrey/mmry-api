@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
+import { IsDateString, IsNotEmpty } from 'class-validator';
 import { ASSETS_TYPE } from 'src/memories/dto/create-memory.dto';
 
 export class AssetsParams {
@@ -39,8 +39,9 @@ export class CreateAdminActivityDto {
   isActive: boolean;
 
   @IsNotEmpty()
+  @IsDateString()
   @ApiProperty()
-  date: number;
+  date: string;
 
   @IsNotEmpty()
   @ApiProperty()

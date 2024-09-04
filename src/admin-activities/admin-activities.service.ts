@@ -69,7 +69,8 @@ export class AdminActivitiesService {
   }
 
   async findOne(id: string) {
-    const foundActivity = (await this.activityModel.findById(id)).populate({
+    console.log({id})
+    const foundActivity = await this.activityModel.findById(id).populate({
       path: 'categories',
       model: 'AdminCategory',
     });
