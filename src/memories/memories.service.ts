@@ -176,9 +176,10 @@ export class MemoriesService {
     console.log({ memoryCategories, currentUserCategoriesIds });
     const populatedCategories = memoryCategories
       ?.map((categoryId: any) => {
-        return currentUserCategories?.filter(
+        const found = currentUserCategories?.filter(
           (category) => category?._id.toString() == categoryId.toString(),
-        );
+        )[0];
+        return found;
       })
       .filter(Boolean);
     return populatedCategories;
