@@ -43,14 +43,45 @@ export class UserWishesService {
 
   async findAll(): Promise<any[]> {
     const currentUserId = await this.auth.getCurrentUserId();
-    const currentUser = await this.userModel.findById(currentUserId).populate({
-      path: 'wishes.wish',
-      model: 'UserWish',
-      populate: {
-        path: 'releatedActivity releatedContest',
-      },
-    });
-    return currentUser?.wishes ?? [];
+    const currentUser = await this.userModel
+      .findById(currentUserId)
+      .populate({
+        path: 'wishes.wish',
+        model: 'UserWish',
+        populate: {
+          path: 'releatedActivity releatedContest',
+        },
+      })
+      .lean();
+    // const foundWishes = currentUser?.wishes;
+    const transformedWishes = currentUser?.wishes
+      .map((wish: any) => {
+        const currentType = wish?.wish?.type;
+        console.log({ currentType });
+        if (currentType == 'activity') {
+          return {
+            ...wish,
+            wish: {
+              ...wish?.wish,
+              data: wish?.wish?.releatedActivity,
+              releatedActivity: wish?.wish?.releatedActivity?.id,
+            },
+          };
+        }
+        if (currentType == 'contest') {
+          return {
+            ...wish,
+            wish: {
+              ...wish?.wish,
+              data: wish?.wish?.releatedContest,
+              releatedContest: wish?.wish?.releatedContest?.id,
+            },
+          };
+        }
+        return wish;
+      })
+      .filter((wish) => wish?.wish?.data);
+    return transformedWishes ?? [];
   }
 
   async findOne(id: string) {
@@ -64,7 +95,7 @@ export class UserWishesService {
   }
 
   async remove(id: string) {
-    console.log({id})
+    console.log({ id });
     const removedWish = await this.userWishModel.deleteOne({ _id: id });
     const currentUser = await this.auth.getCurrentUserOrThrow();
     // console.log(currentUser.wishes)
