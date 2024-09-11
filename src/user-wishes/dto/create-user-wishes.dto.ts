@@ -15,7 +15,7 @@ export class CreateUserWishDto {
 
   @IsNotEmpty()
   @IsOptional()
-  @ApiProperty()
+  @ApiProperty({ required: false })
   data: Data;
 
   @ApiProperty({ required: false })

@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Query } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { CreateAdminContestDto } from './dto/create-admin-contest.dto';
@@ -10,6 +10,7 @@ import {
   AdminCategory,
   AdminCategoryDocument,
 } from 'src/admin-categories/entities/admin-category.entity';
+import { FindAllQuery } from './dto/find-all.query';
 
 @Injectable()
 export class AdminContestsService {
@@ -48,8 +49,15 @@ export class AdminContestsService {
     return newAdminContest;
   }
 
-  async findAll() {
-    const allAdminContests = await this.contestModel.find();
+  async findAll(query: FindAllQuery) {
+    const now = new Date();
+    const filterActive = !!query.isActive
+      ? {
+          'duration.to': { $gt: now },
+        }
+      : {};
+
+    const allAdminContests = await this.contestModel.find(filterActive);
     return allAdminContests;
   }
 

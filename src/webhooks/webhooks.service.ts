@@ -60,6 +60,7 @@ export class WebhooksService {
     return { success: true };
   }
   private async createUser(userData: UserJSON) {
+    console.log({userData})
     const {
       id,
       username,
