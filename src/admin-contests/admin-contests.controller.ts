@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Query } from '@nestjs/common';
 import { AdminContestsService } from './admin-contests.service';
 import { CreateAdminContestDto } from './dto/create-admin-contest.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { FindAllQuery } from './dto/find-all.query';
 
 @ApiTags('Admin Contest')
 @ApiBearerAuth('JWT')
@@ -15,8 +16,8 @@ export class AdminContestsController {
   }
 
   @Get()
-  findAll() {
-    return this.adminContestsService.findAll();
+  findAll(@Query() query: FindAllQuery) {
+    return this.adminContestsService.findAll(query);
   }
 
   @Get(':id')
