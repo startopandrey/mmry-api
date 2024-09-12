@@ -29,11 +29,12 @@ export class UserFollowersService {
       throw new BadRequestException(`User ID is wrong`);
     }
     const currentUser = await this.auth.getCurrentUserOrThrow();
+    const currentUserId = currentUser._id.toString();
     const foundUser = await this.userModel.findById(followedUserId);
     if (!foundUser) {
       throw new HttpException('User not found', HttpStatus.FORBIDDEN);
     }
-    if (currentUser._id.toString() === followedUserId) {
+    if (currentUserId === followedUserId) {
       throw new HttpException(
         'You cannot follow yourself',
         HttpStatus.CONFLICT,
@@ -49,17 +50,25 @@ export class UserFollowersService {
       );
     }
     const newFollower = { userId: followedUserId, since: Date.now() };
+    const currentUserAsFollower = { userId: currentUserId, since: Date.now() };
     currentUser.followers.push(newFollower);
+    foundUser.followers.push(currentUserAsFollower);
     await currentUser.save();
+    await foundUser.save();
     return 'SUCCESS';
   }
   async unFollow({ userId: unFollowedUserId }: UnFollowDto) {
     const currentUser = await this.auth.getCurrentUserOrThrow();
+    const currentUserId = currentUser._id;
+    const foundUser = await this.userModel.findById(unFollowedUserId);
     currentUser.followers = currentUser.followers.filter(
       (follower) => follower.userId != unFollowedUserId,
     );
+    foundUser.followers = foundUser.followers.filter(
+      (follower) => follower.userId != currentUserId,
+    );
     await currentUser.save();
-    console.log(currentUser, unFollowedUserId);
+    await foundUser.save();
     return 'SUCCESS';
   }
 
