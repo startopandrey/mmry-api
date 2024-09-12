@@ -62,7 +62,10 @@ export class AdminContestsService {
   }
 
   async findOne(id: string) {
-    const foundAdminContest = await this.contestModel.findById(id);
+    const foundAdminContest = await this.contestModel.findById(id).populate({
+      path: 'categories',
+      model: 'AdminCategory',
+    });
     if (!foundAdminContest?._id) {
       throw new HttpException(
         'Contest was not found',
