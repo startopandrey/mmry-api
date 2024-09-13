@@ -35,7 +35,7 @@ export class UserWishesService {
       author: currentUser._id,
     };
     const newWish = await this.userWishModel.create(transformedNewWish);
-    const wishObj = { wish: newWish._id };
+    const wishObj = { wish: newWish._id, isActive: true };
     currentUser.wishes.push(wishObj);
     await currentUser.save();
     return newWish;
@@ -53,8 +53,9 @@ export class UserWishesService {
         },
       })
       .lean();
+    const activeWishes = currentUser?.wishes?.filter((wish) => wish?.isActive);
     // const foundWishes = currentUser?.wishes;
-    const transformedWishes = currentUser?.wishes
+    const transformedWishes = activeWishes
       .map((wish: any) => {
         const currentType = wish?.wish?.type;
         console.log({ currentType });
@@ -102,6 +103,19 @@ export class UserWishesService {
     currentUser.wishes = currentUser.wishes.filter(
       (item: any) => item._id?.toString() != id,
     );
+    await currentUser.save();
+    return 'SUCCESS';
+  }
+  async completed(id: string) {
+    console.log({ id });
+    const currentUser = await this.auth.getCurrentUserOrThrow();
+    // console.log(currentUser.wishes)
+    currentUser.wishes = currentUser.wishes.map((item: any) => {
+      if (item._id == id) {
+        return { ...item, isActive: false };
+      }
+      return item;
+    });
     await currentUser.save();
     return 'SUCCESS';
   }

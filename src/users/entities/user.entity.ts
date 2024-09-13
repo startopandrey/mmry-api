@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, {  SchemaTypes, Types } from 'mongoose';
+import mongoose, { SchemaTypes, Types } from 'mongoose';
 
 export type UserDocument = User & mongoose.Document;
 
@@ -50,6 +50,9 @@ class Category {
 class Wish {
   @Prop({ type: Types.ObjectId })
   wish: Types.ObjectId;
+
+  @Prop({ type: SchemaTypes.Boolean })
+  isActive: boolean;
 }
 
 // base entity user class
@@ -83,7 +86,14 @@ export class User {
   @Prop({ type: [Category] })
   categories: Category[];
 
-  @Prop({ type: [{ wish: { type: SchemaTypes.ObjectId, ref: 'UserWish' } }] })
+  @Prop({
+    type: [
+      {
+        wish: { type: SchemaTypes.ObjectId, ref: 'UserWish' },
+        isActive: { type: SchemaTypes.Boolean },
+      },
+    ],
+  })
   wishes: Wish[];
 
   @Prop({
