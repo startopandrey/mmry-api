@@ -37,8 +37,9 @@ export class Geometry {
 }
 
 class LocationParams {
-  @Prop()
+  @Prop({ required: false })
   address: string;
+
   @Prop({ type: Geometry })
   geometry: Geometry;
 }
