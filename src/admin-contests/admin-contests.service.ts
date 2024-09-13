@@ -23,7 +23,6 @@ export class AdminContestsService {
   ) {}
   async create(createAdminContestDto: CreateAdminContestDto) {
     let address = '';
-
     const lng = createAdminContestDto?.location?.coordinates?.lng;
     const lat = createAdminContestDto?.location?.coordinates?.lat;
     if (lng && lat) {
