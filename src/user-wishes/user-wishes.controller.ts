@@ -38,6 +38,10 @@ export class UserWishesController {
   //   return this.userWishService.update(+id, updateUserWishDto);
   // }
 
+  @Delete('/completed/:id')
+  completed(@Param('id') id: string) {
+    return this.userWishService.completed(id);
+  }
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userWishService.remove(id);
