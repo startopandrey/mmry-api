@@ -11,6 +11,7 @@ import {
   AdminCategoryDocument,
 } from 'src/admin-categories/entities/admin-category.entity';
 import { FindAllQuery } from './dto/find-all.query';
+import axios from 'axios';
 
 @Injectable()
 export class AdminContestsService {
@@ -21,10 +22,28 @@ export class AdminContestsService {
     private readonly contestModel: Model<AdminContestDocument>,
   ) {}
   async create(createAdminContestDto: CreateAdminContestDto) {
+    let address = '';
+    const lng = createAdminContestDto?.location?.coordinates?.lng;
+    const lat = createAdminContestDto?.location?.coordinates?.lat;
+    if (lng && lat) {
+      const addressFromCoords = await axios.get(
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?types=address`,
+        {
+          params: {
+            access_token: process.env.MAPBOX_ACCESS_TOKEN,
+          },
+        },
+      );
+      address = addressFromCoords?.data?.features[0]?.text;
+    }
+    const date = createAdminContestDto?.date?.length
+      ? { date: createAdminContestDto?.date }
+      : {};
     const transformedAdminContest = {
       ...createAdminContestDto,
+      ...date,
       location: {
-        address: createAdminContestDto.location.address,
+        address: address,
         geometry: {
           coordinates: createAdminContestDto.location.coordinates,
         },

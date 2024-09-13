@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsNotEmpty } from 'class-validator';
+import { IsDateString, IsNotEmpty, IsOptional } from 'class-validator';
 import { ASSETS_TYPE } from 'src/memories/dto/create-memory.dto';
 
 export class AssetsParams {
@@ -10,6 +10,7 @@ export class AssetsParams {
   @ApiProperty()
   uri: string;
 }
+
 export class Coordinates {
   @ApiProperty()
   lat: number;
@@ -30,7 +31,7 @@ export class CreateAdminActivityDto {
   @ApiProperty({ required: true })
   title: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @ApiProperty({ type: AssetsParams, isArray: true })
   readonly assets: AssetsParams[];
 
@@ -38,7 +39,7 @@ export class CreateAdminActivityDto {
   @ApiProperty()
   isActive: boolean;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsDateString()
   @ApiProperty()
   date: string;
@@ -47,7 +48,7 @@ export class CreateAdminActivityDto {
   @ApiProperty()
   note: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @ApiProperty()
   location: LocationParams;
 

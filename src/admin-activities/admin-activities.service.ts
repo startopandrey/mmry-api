@@ -22,23 +22,28 @@ export class AdminActivitiesService {
     private readonly activityModel: Model<ActivityDocument>,
   ) {}
   async create(createActivityDto: CreateAdminActivityDto) {
-    let address = 'No address is available :(';
-    try {
+    let address = '';
+
+    const lng = createActivityDto?.location?.coordinates?.lng;
+    const lat = createActivityDto?.location?.coordinates?.lat;
+    if (lng && lat) {
       const addressFromCoords = await axios.get(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${createActivityDto.location.coordinates.lng},${createActivityDto.location.coordinates.lat}.json?types=address`,
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?types=address`,
         {
           params: {
             access_token: process.env.MAPBOX_ACCESS_TOKEN,
           },
         },
       );
-      console.log(addressFromCoords.data.features[0]?.text);
-      console.log(addressFromCoords.data);
       address = addressFromCoords.data.features[0]?.text;
-    } catch (error) {}
+    }
 
+    const date = createActivityDto?.date?.length
+      ? { date: createActivityDto?.date }
+      : {};
     const transformedActivity = {
       ...createActivityDto,
+      ...date,
       location: {
         address: address,
         geometry: {
